@@ -162,20 +162,25 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+      // Browserdan bildirishnoma ruxsatini so‘rash
       if (Notification.permission !== "granted") {
           Notification.requestPermission();
       }
+
+      // Har 10 soniyada yangi xabarlarni olish
+      setInterval(fetchLatestNotification, 10000);
   });
 
-  // WebSocket ulanishi
-  const socket = new WebSocket("wss://" + window.location.host + "/ws/notifications/");
-
-  socket.onmessage = function (event) {
-      const data = JSON.parse(event.data);
-      if (data.message) {
-          showNotification(data.message);
-      }
-  };
+  function fetchLatestNotification() {
+      fetch("https://mystudycenter.pythonanywhere.com/auth/get_last_notification/")
+          .then(response => response.json())
+          .then(data => {
+              if (data.message) {
+                  showNotification(data.message);
+              }
+          })
+          .catch(error => console.error("Xatolik:", error));
+  }
 
   function showNotification(message) {
       if (Notification.permission === "granted") {

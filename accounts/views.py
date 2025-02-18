@@ -237,7 +237,7 @@ def send_notification(request, role):
 
 @login_required
 def get_latest_notification(request):
-    notif = NotifactionMessage.objects.filter(receiver=request.user).order_by('-id').first()
-    if notif:
-        return JsonResponse({"message": notif.message})
-    return JsonResponse({"message": None})
+    last_notification = NotifactionMessage.objects.filter(receiver=request.user).order_by('-created_at').first()
+    if last_notification:
+        return JsonResponse({"message": last_notification.message})
+    return JsonResponse({"message": ""})
