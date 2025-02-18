@@ -6,6 +6,5 @@ urlpatterns = [
     path('save/fcm/token/', save_firebase_token, name='save_user_token'),
     path('settings/', settings_view, name='settings'),
     path('save-session/', save_telegram_id, name='save_session'),
-    path('telegram/', include('social_django.urls', namespace='social')),
     path('notify/<str:role>/', send_notification, name='notify_users'),
 ]
