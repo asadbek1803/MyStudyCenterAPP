@@ -63,27 +63,28 @@ logger = logging.getLogger(__name__)
 def SignIn(request):
     # Agar foydalanuvchi allaqachon tizimga kirgan bo'lsa
     if request.user.is_authenticated:
-        return redirect('student' if request.user.role == 'student' else 'dashboard')
+        return redirect('student' if getattr(request.user, 'role', None) == 'student' else 'dashboard')
 
     if request.method == 'POST':
         username = request.POST.get('secret')
         password = request.POST.get('password')
-        
+
         if not username or not password:
             messages.error(request, "Hamma maydonlarni to'ldirish shart!")
             return redirect('login')
-        
+
         # Foydalanuvchini autentifikatsiya qilish
         user = authenticate(request, identifier=username, password=password)
-        
-        if user is not None:
+
+        if user:
             if not user.is_active:
                 messages.error(request, "Sizning akkauntingiz bekor qilingan. Iltimos, guruh rahbari bilan bog'laning.")
                 return redirect('login')
-            
+
             # Foydalanuvchini tizimga kirgizish
             login(request, user)
-            messages.success(request, f"{'O\'quvchi' if user.role == 'student' else 'O\'qituvchi'} profiliga muvaffaqiyatli kirildi!")
+            role = "O'quvchi" if getattr(user, 'role', None) == 'student' else "O'qituvchi"
+            messages.success(request, f"{role} profiliga muvaffaqiyatli kirildi!")
             return redirect('student' if user.role == 'student' else 'dashboard')
         else:
             messages.error(request, 'Parol yoki UserID xato!')
