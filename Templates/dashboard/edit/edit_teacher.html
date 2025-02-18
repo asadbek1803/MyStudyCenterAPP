@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content%}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .header {
+        background-color: #f0f0f0;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        overflow: hidden;
+    }
+    .latest-news {
+        background-color: #269ba2;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        white-space: nowrap;
+    }
+    .news-ticker {
+        flex-grow: 1;
+        margin-left: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .news-ticker-content {
+        display: inline-block;
+        padding-left: 100%;
+        animation: ticker 20s linear infinite;
+    }
+    @keyframes ticker {
+        0% {
+            transform: translate(0, 0);
+        }
+        100% {
+            transform: translate(-100%, 0);
+        }
+    }
+    .date-time {
+        background-color: #dc2626;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        white-space: nowrap;
+    }
+</style>
+
+{% comment %} <h1> Add Teacher </h1> {% endcomment %}
+<!-- Basic with Icons -->
+    {% comment %} <h1 text-align center>O'qituvchi qo'shish</h1> {% endcomment %}
+    <div class="card mb-4" style='text-align: center; left: 25px;'>
+        <header class="header">
+            <div class="latest-news">Diqqat</div>
+            <div class="news-ticker">
+                <div class="news-ticker-content">Siz kiritgan Username (UserID)ni va parolini eslab qoling aks holda profilga kira olmaydi!</div>
+            </div>
+            {% comment %} <div class="date-time">12:10 / 22.05.2024</div> {% endcomment %}
+        </header>
+        {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                {% if message.tags == 'success'%}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+                {% elif message.tags == 'error'%}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="mb-0 align-items-center">O'qituvchi Tahrirlash {{teacher.username.title}}</h5>
+        <small class="text-muted float-end">(*)bilan belgiansa majburiy maydonlar</small>
+      </div>
+      {% if teacher.profile_image %}
+      <img src="{{teacher.profile_image.url}}" style="border-radius: 50%; height: 80px; width: 80px; margin-left: 45%;">
+      {% endif %}  
+      <div class="card-body">
+
+        <form method='post' action='/center/edit/teacher/{{teacher.username}}/' enctype='multipart/form-data'> {% csrf_token %}
+          <div class="row mb-3">
+            
+            <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">*Ism</label>
+            <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+                <span id="basic-icon-default-fullname2" class="input-group-text"
+                  ><i class="bx bx-user"></i
+                ></span>
+                <input
+                  name = 'first_name'
+                  type="text"
+                  class="form-control"
+                  id="basic-icon-default-fullname"
+                  placeholder="Olim"
+                  aria-label="Olim"
+                  value="{{teacher.first_name}}"
+                  aria-describedby="basic-icon-default-fullname2"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">*Familya</label>
+            <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+                <span id="basic-icon-default-fullname2" class="input-group-text"
+                  ><i class="bx bx-user"></i
+                ></span>
+                <input
+                  name = 'last_name'
+                  type="text"
+                  class="form-control"
+                  id="basic-icon-default-fullname"
+                  placeholder="Olimov"
+                  aria-label="Olimov"
+                  value = "{{teacher.last_name}}"
+                  aria-describedby="basic-icon-default-fullname2"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">*UserID (Username)</label>
+            <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+                <span id="basic-icon-default-fullname2" class="input-group-text"
+                  ><i class="bx bxs-user-check"></i
+                ></span>
+                <input
+                  name = 'username'
+                  type="text"
+                  class="form-control"
+                  id="basic-icon-default-fullname"
+                  placeholder="olimov01"
+                  aria-label="olimov01"
+                  value = "{{teacher.username}}"
+                  aria-describedby="basic-icon-default-fullname2"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">*Telefon raqami</label>
+            <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+                <span id="basic-icon-default-fullname2" class="input-group-text"
+                  ><i class="bx bx-phone-call"></i
+                ></span>
+                <input
+                  name = 'phone'
+                  type="text"
+                  class="form-control"
+                  id="basic-icon-default-fullname"
+                  placeholder="+998 (00) 000-0000"
+                  aria-label="+998 (00) 000-0000"
+                  value = "{{teacher.phone}}"
+                  aria-describedby="basic-icon-default-fullname2"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="exampleFormControlSelect1" class="form-label">Fanlar</label>
+            <select name="fan" class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
+              <option value="" selected>Birini tanlang!</option>
+              {% for fan in fanlar %}
+              <option value="{{ fan.id }}">{{ fan.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="basic-icon-default-company">*O'quv markaz</label>
+            <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+                <span id="basic-icon-default-company2" class="input-group-text"
+                  ><i class="bx bx-buildings"></i
+                ></span>
+                <input
+                  name ='study_center'
+                  type="text"
+                  id="basic-icon-default-company"
+                  class="form-control"
+                  placeholder="{{request.user.study_center.name}}"
+                  aria-label="{{request.user.study_center.name}}"
+                  aria-describedby="basic-icon-default-company2"
+                  readonly="true"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="basic-icon-default-email">Email</label>
+            <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+                <span class="input-group-text"><i class="bx bx-envelope"></i></span>
+                <input
+                  name = 'email'
+                  type="text"
+                  id="basic-icon-default-email"
+                  class="form-control"
+                  placeholder="john.doe"
+                  aria-label="john.doe"
+                  value = "{{teacher.email}}"
+                  aria-describedby="basic-icon-default-email2"
+                />
+                <span id="basic-icon-default-email2" class="input-group-text">@example.com</span>
+              </div>
+              <div class="form-text">You can use letters, numbers & periods</div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="exampleFormControlSelect1" class="form-label">Ishlamoqdami?</label>
+            <select name="is_active" class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
+              {% if teacher.is_active %}
+              
+              <option value="True" selected>Ha</option>
+              <option value="False">Yo'q</option>
+              {% else %}
+              <option value="True">Ha</option>
+              <option value="False" selected>Yo'q</option>
+              {% endif %}
+              
+            </select>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 form-label" for="basic-icon-default-phone">Address</label>
+            <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+                <span id="basic-icon-default-phone2" class="input-group-text"
+                  ><i class="bx bxs-city"></i
+                ></span>
+                <input
+                  name = 'address'
+                  type="text"
+                  id="basic-icon-default-phone"
+                  class="form-control phone-mask"
+                  placeholder="Farg'ona viloyati Toshloq tumani .."
+                  aria-label="Farg'ona viloyati Toshloq tumani .."
+                  value = "{{teacher.address}}"
+                  aria-describedby="basic-icon-default-phone2"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="form-password-toggle">
+            <label class="form-label" for="basic-default-password32">Parol</label>
+            <div class="input-group input-group-merge">
+              <input
+                name = 'password'
+                type="password"
+                class="form-control"
+                id="basic-default-password32"
+                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                value = ""
+                aria-describedby="basic-default-password"
+              />
+              <span class="input-group-text cursor-pointer" id="basic-default-password"
+                ><i class="bx bx-hide"></i
+              ></span>
+            </div>
+          </div>
+          <div class="form-password-toggle">
+            <label class="form-label" for="basic-default-password32">Parolni takrorlang</label>
+            <div class="input-group input-group-merge">
+              <input
+                name = 'password2'
+                type="password"
+                class="form-control"
+                id="basic-default-password32"
+                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                value = ""
+                aria-describedby="basic-default-password"
+              />
+              <span class="input-group-text cursor-pointer" id="basic-default-password"
+                ><i class="bx bx-hide"></i
+              ></span>
+            </div>
+          </div>
+
+          <div class="row mb-3" style='margin-top: 20px;'>
+            <label class="col-sm-2 form-label" for="basic-icon-default-message">O'qituvchi haqida qisqacha (Optional)</label>
+            <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+                <span id="basic-icon-default-message2" class="input-group-text"
+                  ><i class="bx bx-comment"></i
+                ></span>
+                <textarea
+                  name = 'description'
+                  id="basic-icon-default-message"
+                  class="form-control"
+                  placeholder="Hi, Do you have a moment to talk Joe?"
+                  aria-label="Hi, Do you have a moment to talk Joe?"
+                  value = "{{teacher.description}}"
+                  aria-describedby="basic-icon-default-message2"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <div style='margin-top: 20px;' class="mb-3">
+            <label for="formFileMultiple" class="form-label">Profil uchun rasm (Optional)</label>
+            <input name='logo' class="form-control" type="file" id="formFileMultiple" multiple />
+            
+          </div>
+          <div>
+        <div class="row justify-content-end">
+            <div class="col-sm-10">
+              <button type="submit" class="btn btn-primary">✅Saqlash</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- / Content -->
+{% comment %} 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      if (confirm('Akkount yaratildi. Yuklab olmoqchimisiz?')) {
+          fetch('/download-credentials/')
+              .then(response => response.blob())
+              .then(blob => {
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'user_credentials.txt';
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+              })
+              .catch(error => console.error('Error:', error));
+      }
+  });
+</script> {% endcomment %}
+
+
+
+{% endblock %}

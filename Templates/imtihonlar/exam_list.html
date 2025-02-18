@@ -1,0 +1,159 @@
+
+
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+
+
+<style>
+
+    body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+thead {
+    background-color: #f4f4f4;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+</style>
+<div style='margin-left: 28px; margin-top: 20px;'>
+    <div style='margin-top: 10px; display: flex; justify-content: flex-end;'>
+      <a style='margin-right: 10px;' href='{% url "create_exam" %}'>
+        <button type="button" class="btn btn-sm btn-outline-primary">
+          <i class="bx bx-plus-medical"></i> Imtihon yaratish
+        </button>
+      </a>
+      <a href='{% url "export_guruhlar" %}'>
+        <button type="button" class="btn btn-sm btn-outline-primary">
+          <img style='height:20px;' src='{% static 'icons/excel.png' %}'> Excel (Export) qilish
+        </button>
+      </a>
+    </div>
+  </div>
+ <h1>Imtihonlar Ro'yxati</h1>
+
+ <h2>Bo'layotgan Imtihonlar</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Imtihon Nomi</th>
+            <th>Sanasi</th>
+            <th>Vaqti</th>
+            <th>Markaz</th>
+            <th>Status</th>
+            <th>Ro'yxatdan o'tish linki</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for exam in ongoing_exams %}
+        <tr>
+            <td><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'exam_detail' exam_token=exam.exam_token%}">{{ exam.name }} </a></td>
+            <td>{{ exam.date }}</td>
+            <td>{{ exam.end_time }}</td>
+            <td>{{ exam.study_center }}</td>
+            <td>Imtihon kutilmoqda</td>
+            <td>
+                <input type="text" id="registrationLink{{ exam.id }}" value="{{ request.scheme }}://{{ request.get_host }}{% url 'signup_exam' exam_token=exam.exam_token%}" readonly style="display:none;">
+                <button class="copy-button" data-exam-id="{{ exam.id }}">
+                    <i class="bx bxs-copy"></i> Nusxalash
+                </button>
+                <span id="copyMessage{{ exam.id }}" style="display: none;">Nusxalandi!</span>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">Bo'layotgan imtihonlar mavjud emas.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    <h2>Tugagan Imtihonlar</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Imtihon Nomi</th>
+                <th>Sanasi</th>
+                <th>Vaqti</th>
+                <th>Markaz</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for exam in completed_exams %}
+            <tr>
+                <td><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'exam_detail' exam_token=exam.exam_token%}">{{ exam.name }}</a></td>
+                <td>{{ exam.date }}</td>
+                <td>{{ exam.end_time }}</td>
+                <td>{{ exam.study_center }}</td>
+                <td>Imtihon yakunlangan</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Tugagan imtihonlar mavjud emas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const copyButtons = document.querySelectorAll('.copy-button');
+
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const examId = this.getAttribute('data-exam-id');
+            const registrationLink = document.getElementById(`registrationLink${examId}`);
+            const copyMessage = document.getElementById(`copyMessage${examId}`);
+
+            registrationLink.select();
+            registrationLink.setSelectionRange(0, 99999);
+
+            navigator.clipboard.writeText(registrationLink.value)
+                .then(() => {
+                    copyMessage.style.display = 'inline';
+                    copyMessage.textContent = 'Muvaffaqiyatli nusxalandi!';
+
+                    setTimeout(() => {
+                        copyMessage.style.display = 'none';
+                    }, 3000);
+                })
+                .catch(err => {
+                    console.error('Nusxalashda xatolik yuz berdi: ', err);
+                    copyMessage.style.display = 'inline';
+                    copyMessage.textContent = 'Nusxalashda xatolik yuz berdi';
+                });
+        });
+    });
+});
+</script>
+{% endblock %}

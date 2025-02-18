@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Form controls -->
+        <form method='post' action='/center/add/study_center/', enctype='multipart/form-data'> {% csrf_token %}
+        <div class="col-md-6">
+            <div class="card mb-4">
+              <h5 class="card-header">O'quv markaz qo'shish uchun formani to'ldiring!</h5>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">O'quv markaz nomi</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="exampleFormControlInput1"
+                    placeholder="Test o'quv markazi!"
+                    name='name'
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlReadOnlyInput1" class="form-label">Slug</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="exampleFormControlReadOnlyInput1"
+                    placeholder="Slug markaz!"
+                    readonly
+                    name='slug'
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlReadOnlyInputPlain1" class="form-label">Address</label>
+                  <input
+                    type="text"
+                    readonly
+                    class="form-control-plaintext"
+                    id="exampleFormControlReadOnlyInputPlain1"
+                    value="Fergana. Toshloq"
+                    name='address1'
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlSelect1" class="form-label">Boshqaruvchi admin</label>
+                  <select name='admin' class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
+                    <option selected>Birini tanlang!</option>
+                    <option value="1">1-admin</option>
+                    <option value="2">2-admin</option>
+                    <option value="3">3-admin</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleDataList" class="form-label">Address to'liq</label>
+                  <input
+                    class="form-control"
+                    list="datalistOptions"
+                    id="exampleDataList"
+                    placeholder="To'liq..."
+                    name='address'
+                  />
+                  <datalist id="datalistOptions">
+                    <option value="Fergana"></option>
+                    <option value="Toshloq"></option>
+                    <option value="Zarkent"></option>
+                    <option value="Los Angeles"></option>
+                    <option value="Chicago"></option>
+                  </datalist>
+                </div>
+                
+                <div>
+                  <label for="exampleFormControlTextarea1" class="form-label">O'quv markaz haqida to'liqroq ma'lumot bering!</label>
+                  <textarea name='description' class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="formFileMultiple" class="form-label">O'quv markaz uchun logo. Yoki brand</label>
+                    <input name='logo' class="form-control" type="file" id="formFileMultiple" multiple />
+                  </div>
+              </div>
+            </div>
+            <div style='color: red;'> {{error}} </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Qo'shish</button>
+          <!-- Input Sizing -->
+
+          </div>
+        </div>
+      </form>
+        <!--/ Order Statistics -->
+
+        <!-- Expense Overview -->
+        
+        <!--/ Expense Overview -->
+
+        <!-- Transactions -->
+        
+      
+    
+    <!-- / Content -->
+{% endblock %}

@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .header {
+        background-color: #f8f9fa;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .card-header {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 15px;
+        font-weight: bold;
+    }
+    .table thead th {
+        background-color: #f8f9fa;
+    }
+    .btn-warning {
+        color: white;
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+    .btn-warning:hover {
+        color: white;
+        background-color: #e0a800;
+        border-color: #d39e00;
+    }
+</style>
+
+
+
+{% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<div style='margin-left: 28px;' class="card">
+    <div style='margin-left: 28px; margin-top: 20px;'>
+      <div style='margin-top: 10px; display: flex; justify-content: flex-end;'>
+        
+        <a href='{% url "talabalar_download" %}'>
+          <button type="button" class="btn btn-sm btn-outline-primary"><img style='height:20px;' src='{% static 'icons/excel.png' %}'> Excel (Export) qilish</button>
+        </a>
+      </div>
+    </div>
+      <h5 class="card-header">O'quvchilar</h5>
+      
+     
+      <div class="table-responsive text-nowrap">
+        <form method="get">
+          <label for="id_status">Statusni tanlang:</label>
+          <select name="status" id="id_status">
+              
+              <option value="not_payed" {% if status_filter == 'not_payed' %}selected{% endif %}>To'lov qilmagan</option>
+              <option value="payed" {% if status_filter == 'payed' %}selected{% endif %}>To'lov qilgan</option>
+              <option value="grand" {% if status_filter == 'grand' %}selected{% endif %}>Grand</option>
+              <option value="never_pay" {% if status_filter == 'never_pay' %}selected{% endif %}>Hech qachon to'lov qilmagan</option>
+            </select>
+          <button type="submit">Filtrlash</button>
+      </form>
+      {% if status_filter == None %}
+      <p style='margin-top: 5px;'>Jami o'quvchilar:<b> {{total_students_counter}} </b></p>
+      {% elif status_filter == 'not_payed' %}
+      <p style='margin-top: 5px;'>Jami to'lov qilmagan o'quvchilar:<b> {{not_payed_counter}} </b></p>
+      {% elif status_filter == 'payed' %}
+      <p style='margin-top: 5px;'>Jami to'lov qilgan o'quvchilar:<b> {{payed_counter}} </b></p>
+      
+      {% elif status_filter == 'grand' %}
+      <p style='margin-top: 5px;'>Jami grand olgan o'quvchilar:<b> {{grand_counter}} </b></p>
+      {% else %}
+      <p style='margin-top: 5px;'>Jami hech qachon to'lov qilmagan o'quvchilar:<b> {{never_payed_counter}} </b></p>
+      {% endif %}
+      <table class="table table-hover">
+          
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Ism va Familyasi</th>
+              <th>Status</th>
+              <th>Oxirgi to'lov qilingan sana </th>
+              <th>Telefon raqami</th>
+              <th> Uy telefon raqami </th>
+              <th> Guruhi </th>
+              <th>Manzili</th>
+              <th>Fani</th>
+              <th>Action</th>
+              
+            </tr>
+          </thead>
+          {% if page_obj.object_list.count == 0 %}
+          <tr>
+              <td colspan="7" class="text-center">O'quvchilar hali qo'shilmagan 😢</td>
+          </tr>
+          {% else %}
+          <tbody class="table-border-bottom-0">
+            {% for item in page_obj.object_list %}
+            <tr>
+              <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{item.student.id}}</strong></td>
+              <td>{{item.student.first_name.title}} {{item.student.last_name.title}}</td>
+              {% if status_filter == 'not_payed' %}
+              <td><span class="badge bg-label-danger me-1">To'lov qilmagan</span></td>
+              {% elif status_filter == 'payed'%}
+              <td><span class="badge bg-label-primary me-1">To'lov qilgan</span></td>
+              {% elif status_filter == 'never_pay' %}
+              <td><span class="badge bg-label-danger me-1">Biror marta ham to'lov qilmagan</span></td>
+              {% elif status_filter == 'grand' %}
+              <td><span class="badge bg-label-primary me-1">Grand</span></td>
+              {% else %}
+              <td><span class="badge bg-label-warning me-1">Filtrlash tugmasini bosing</span></td>
+              {% endif %}
+              <td>{{item.student.last_payment_date|date:'d.m.Y' }}</td>
+              <td>{{item.student.phone}}</td>
+              <td> {{item.student.phone_home }} </td>
+              <td>
+                {% for guruh in item.student.groups.all %}
+                    {{ guruh.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+              {% if item.student.address%}
+              <td>{{item.student.address}}</td>
+              {% else %}
+              <td>O'quvchi manzili kiritilmagan!</td>
+              {% endif %}
+              <td> {%for fan in item.student.fanlar.all %}  {{fan.name}} {% endfor %}</td>
+
+
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                      {% if status_filter == 'payed' or status_filter == 'grand'  %}
+                      <a class="dropdown-item send-message-btn" href="#" role="button" data-student-id="#"
+                        onclick="return confirm('O\'quvchiga to\'lov xabarini yubora olmaysiz!')">
+                        <i class="bx bx-message me-1"></i> To'lov xabarini yuborish
+                    </a>
+                      {% else %}
+                    <a class="dropdown-item send-message-btn" href="#" role="button" data-student-id="{{ item.student.id }}"
+                        onclick="return confirm('O\'quvchiga to\'lov xabari yuborilsinmi?')">
+                        <i class="bx bx-message me-1"></i> To'lov xabarini yuborish
+                    </a>
+                      {% endif %}
+                    </div>
+                </div>
+              </td>
+            </tr>
+            
+           {% endfor %}
+             <!-- Sahifalar -->
+            
+           
+          </tbody>
+        </table>
+        
+      </div>
+      
+   {% endif %}
+    </div>
+    <!--/ Hoverable Table rows -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?status={{status_filter}}&?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?status={{status_filter}}&?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?status={{status_filter}}&?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} JavaScript va xabar yuborish bo'limi {% endcomment %}
+
+
+<h2 style="text-align: center;"> Statistika <br> <b>Jami o'quvchi: {{total_students_counter}}</b></h2>
+    
+    <div class="col-md-4" style="margin-right:60px;">
+        <canvas id="paymentChart" width="400" height="400"></canvas>
+    </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const messageButtons = document.querySelectorAll('.send-message-btn');
+        
+        messageButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const studentId = this.getAttribute('data-student-id');
+                
+                // AJAX orqali xabar yuborish
+                fetch('/center/send_payment_reminder/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        student_id: studentId,
+                        message: "Hurmatli talaba! Siz kurs oylik to'lovini to'lashingiz kerak."
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Xabar muvaffaqiyatli yuborildi!");
+                    } else {
+                        alert("Xatolik yuz berdi.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Xatolik:', error);
+                    alert("Xatolik yuz berdi.");
+                });
+            });
+        });
+    });
+</script>
+
+<!-- chart.js kutubxonasi -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('paymentChart').getContext('2d');
+    const paymentChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['To\'lamaganlar', 'To\'laganlar', 'Biror marta ham to\'lov qilmaganlar', 'Grand'],
+            datasets: [{
+                data: [{{ not_payed_counter }}, {{ payed_counter }}, {{ never_payed_counter }}, {{grand_counter}}],
+                backgroundColor: ['#f39c12', '#27ae60', '#e74c3c', '#FFFF00'],
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    });
+</script>
+
+{% endblock %}

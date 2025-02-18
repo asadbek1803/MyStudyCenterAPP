@@ -1,0 +1,34 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<body>
+    <h2>Imtihonga ro'yxatdan o'tish</h2>
+    <p>Imtihon: {{ exam.name }}</p>
+    <p>Boshlanish vaqt: {{ exam.start_time }} - {{ exam.end_time }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="first_name">Ism:</label>
+        <input type="text" id="first_name" name="first_name" value="{{ request.user.first_name }}" disabled readonly><br><br>
+        <label for="last_name">Familiya:</label>
+        <input type="text" id="last_name" name="last_name" value="{{ request.user.last_name }}" disabled readonly><br><br>
+        <label for="phone_number">Telefon raqami:</label>
+        <input type="text" id="phone_number" name="phone_number" value="{{request.user.phone_home}}" disabled required><br><br>
+        <label for="group">Guruh:</label>
+        <input type="text" id="group" name="group" value="{% for guruh in user.groups.all %} {{guruh.name}} | {% endfor %}" disabled required><br><br>
+
+        <label for="shift_choices">Smena:</label>
+        <select id="shift_choices" name="shift_choices">
+            <option value="">Tanlang (Agar mavjud bo'lsa)</option>
+            {% for shift in shifts %}
+                <option value="{{ shift.value }}">{{ shift.label }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <button type="submit">Ro'yxatdan o'tish</button>
+    </form>
+</body>
+</html>
+{% endblock %}

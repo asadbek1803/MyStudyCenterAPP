@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3 class="mb-4">Darsni Yangilash</h3>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Guruh -->
+        <div class="mb-3">
+            <label for="group" class="form-label">Guruhni tanlang</label>
+            <select class="form-select" id="group" name="group" required>
+                {% for group in groups %}
+                    <option value="{{ group.id }}" {% if group.id == lesson.group.id %}selected{% endif %}>
+                        {{ group.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- O'qituvchilar -->
+        <div class="mb-3">
+            <label for="teachers" class="form-label">O'qituvchilarni tanlang</label>
+            <select class="form-select" id="teachers" name="teachers" multiple>
+                {% for teacher in teachers %}
+                    <option value="{{ teacher.id }}" {% if teacher in lesson.group.teachers.all %}selected{% endif %}>
+                        {{ teacher.first_name }} {{ teacher.last_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- Dars kunlari va vaqtlar -->
+        <div class="mb-3">
+            <label class="form-label">Dars kunlari va vaqtlar</label>
+            <div id="schedule-container">
+                {% for schedule in lesson.schedules.all %}
+                <div class="row mb-2 schedule-row">
+                    <div class="col-md-6">
+                        <select class="form-select" name="days" required>
+                            {% for day in days %}
+                                <option value="{{ day.0 }}" {% if day.0 == schedule.day %}selected{% endif %}>
+                                    {{ day.1 }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="time" class="form-control" name="times" value="{{ schedule.time }}" required>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-secondary" id="add-schedule">+ Jadval qo'shish</button>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Yangilash</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('add-schedule').addEventListener('click', function () {
+        const container = document.getElementById('schedule-container');
+        const scheduleRow = document.createElement('div');
+        scheduleRow.className = 'row mb-2 schedule-row';
+
+        const daysSelect = `
+            <div class="col-md-6">
+                <select class="form-select" name="days" required>
+                    {% for day in days %}
+                        <option value="{{ day.0 }}">{{ day.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>`;
+        
+        const timeInput = `
+            <div class="col-md-6">
+                <input type="time" class="form-control" name="times" required>
+            </div>`;
+
+        scheduleRow.innerHTML = daysSelect + timeInput;
+        container.appendChild(scheduleRow);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<h5>Noqulaylik uchun uzr so'raymiz!</h5>
+
+<p> AM: 12:00 AM - yarim tun, 1:00 AM - ertalab 1, 11:00 AM - ertalab 11.<br>
+    PM: 12:00 PM - tushlik, 1:00 PM - tushdan keyin 1, 11:00 PM - kechki 11.</p>
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Yangi Dars Qo'shish</h2>
+    <form method="post" class="shadow p-4 rounded bg-light">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="group" class="form-label">Guruh:</label>
+            <select name="group" id="group" class="form-select">
+                <option selected disabled>Guruhni tanlang</option>
+                {% for group in groups %}
+                    <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="study_center" class="form-label">O'quv Markaz:</label>
+            <select name="study_center" id="study_center" class="form-select">
+                
+             
+                    <option selected value="{{ study_centers.id }}">{{ study_centers.name }}</option>
+                
+            </select>
+        </div>
+
+        <div id="schedule-container">
+            <div class="schedule-item mb-3">
+                <label for="days" class="form-label">Kunlar:</label>
+                <select name="days" class="form-select">
+                    <option selected disabled>Kunni tanlang</option>
+                    <option value="Duyshanba">Duyshanba</option>
+                    <option value="Seshanba">Seshanba</option>
+                    <option value="Chorshanba">Chorshanba</option>
+                    <option value="Payshanba">Payshanba</option>
+                    <option value="Juma">Juma</option>
+                    <option value="Shanba">Shanba</option>
+                    <option value="Yakshanba">Yakshanba</option>
+                </select>
+
+                <label for="time" class="form-label mt-2">Vaqt:</label>
+                <input type="time" name="times" class="form-control">
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary mb-3" onclick="addScheduleItem()">Yana kun qo'shish</button>
+        <button type="submit" class="btn btn-primary w-100">Saqlash</button>
+    </form>
+    <div class="text-center mt-3">
+        <a href="{% url 'lessons' %}" class="btn btn-link">Orqaga qaytish</a>
+    </div>
+</div>
+
+<script>
+    function addScheduleItem() {
+        const container = document.getElementById('schedule-container');
+        const item = document.querySelector('.schedule-item').cloneNode(true);
+        container.appendChild(item);
+    }
+</script>
+{% endblock %}

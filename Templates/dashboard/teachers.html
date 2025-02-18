@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+
+{% load static %}
+
+{% block content %}
+
+<div style='margin-left: 28px;' class="card">
+    <div style='margin-left: 28px; margin-top: 20px;'>
+      <div style='margin-top: 10px; display: flex; justify-content: flex-end;'>
+        <a style='margin-right: 10px;' href='{% url "add_teacher" %}'>
+          <button type="button" class="btn btn-sm btn-outline-primary"><i class="bx bx-plus-medical"></i>O'qituvchi qo'shish</button>
+        </a>
+        <a href='{% url "export_ustoz" %}'>
+          <button type="button" class="btn btn-sm btn-outline-primary"><img style='height:20px;' src='{% static 'icons/excel.png' %}'> Excel (Export) qilish</button>
+        </a>
+      </div>
+    </div>
+      <h5 class="card-header">Ustozlar</h5>
+      
+      {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+      <div class="table-responsive text-nowrap">
+        <form method="get">
+          <label for="id_status">Statusni tanlang:</label>
+          <select name="status" id="id_status">
+              <option value="all" {% if not status_filter %}selected{% endif %}>Hammasi</option>
+              <option value="False" {% if status_filter == 'False' %}selected{% endif %}>Ishlamaydi</option>
+              <option value="True" {% if status_filter == 'True' %}selected{% endif %}>Ishlamoqda</option>
+          </select>
+          <button type="submit">Filtrlash</button>
+      </form> 
+       
+        <table class="table table-hover">
+          
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Ism va Familyasi</th>
+              <th>Status</th>
+              <th>Telefon raqami</th>
+              <th>Manzili</th>
+              <th>Action</th>
+              
+            </tr>
+          </thead>
+          {% if page_obj.object_list.count == 0 %}
+          <tr>
+              <td colspan="7" class="text-center">O'qituvchilar hali qo'shilmagan 😢</td>
+          </tr>
+          {% else %}
+          <tbody class="table-border-bottom-0">
+              {% for teacher in page_obj.object_list %}
+            <tr>
+              <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{teacher.id}}</strong></td>
+              <td>{{teacher.first_name.title}} {{teacher.last_name.title}}</td>
+              {% if teacher.is_active%}
+              <td><span class="badge bg-label-primary me-1">Ishlamoqda</span></td>
+              {% else %}
+              <td><span class="badge bg-label-danger me-1">O'quv markazda ishlamaydi</span></td>
+              {% endif %}
+
+              <td>{{teacher.phone}}</td>
+              {% if teacher.address%}
+              <td>{{teacher.address}}</td>
+              {% else %}
+              <td>O'qituvchi manzili kiritilmagan!</td>
+              {% endif %}
+
+
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'edit_teacher' teacher.username %}"
+                      ><i class="bx bx-edit-alt me-1"></i> Tahrirlash</a
+                    >
+                    <a class="dropdown-item" href="{% url 'download_credits' teacher.username %}"
+                      ><i class="bx bxs-download me-1"></i> Parol va loginlarni yuklash</a
+                    >
+                    <a class="dropdown-item" href="{% url 'exit_teacher' teacher.username %}"
+                    onclick="return confirm('Amalni tasdiqlaysizmi? ')"    
+                    ><i class="bx bx-exit me-1"></i> O'qitvuchi markazni tark etdi</a
+                    >
+                    <a class="dropdown-item" href="{% url 'delete_teacher' teacher.username %}"
+                    onclick="return confirm('O\'chirishni tasdiqlaysizmi? ')"  
+                    ><i class="bx bx-trash me-1"></i> O'chirish</a
+                    >
+
+                    
+                  </div>
+                </div>
+              </td>
+            </tr>
+  
+           {% endfor %}
+           {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--/ Hoverable Table rows -->
+    <!--/ Hoverable Table rows -->
+    <nav aria-label="Page navigation" style="margin-top: 10px;">
+      <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+              <li class="page-item">
+                  <a class="page-link" href="?status={{status_filter}}&?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                  </a>
+              </li>
+          {% endif %}
+          {% for num in page_obj.paginator.page_range %}
+              <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                  <a class="page-link" href="?status={{status_filter}}&?page={{ num }}">{{ num }}</a>
+              </li>
+          {% endfor %}
+          {% if page_obj.has_next %}
+              <li class="page-item">
+                  <a class="page-link" href="?status={{status_filter}}&?page={{ page_obj.next_page_number }}" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                  </a>
+              </li>
+          {% endif %}
+      </ul>
+  </nav>
+
+{% endblock %}

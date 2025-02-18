@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{%load static%}
+
+
+{% block content %}
+
+
+    <div style='margin-left:28px;' class="card mb-4">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="mb-0">Fan qo'shish</h5>
+        <small class="text-muted float-end">Permission: Faqat direktor qo'sha oladi!</small>
+      </div>
+      {% if messages %}
+      <div class="container mt-3">
+          {% for message in messages %}
+              {% if message.tags == 'success'%}
+              <div class="alert alert-success" role="alert">
+                  {{ message }}
+              </div>
+              {% elif message.tags == 'error'%}
+              <div class="alert alert-danger" role="alert">
+                  {{ message }}
+              </div>
+              {% endif %}
+          {% endfor %}
+      </div>
+    {% endif %}
+      <div class="card-body">
+        <form method='post' action='/center/add/fan/'> {% csrf_token %}
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="basic-default-name">Fan nomi</label>
+            <div class="col-sm-10">
+              <input name='name' type="text" class="form-control" id="basic-default-name" placeholder="Matematika" />
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlSelect1" class="form-label">O'qituvchi</label>
+            <select name='teacher' class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
+              <option value='' selected>Tanlash uchun bosing</option>
+              {% for teacher in teachers %}
+              <option value="{{teacher.id}}">{{teacher.first_name}}</option>
+                {% endfor %}
+            </select>
+          </div>
+          <div class="row justify-content-end">
+            <div class="col-sm-10">
+              <button type="submit" class="btn btn-primary">Qo'shish</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+   <!-- Basic with Icons -->
+
+{% endblock %}

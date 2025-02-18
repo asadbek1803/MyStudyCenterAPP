@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+ <!-- Bootstrap Table with Header - Dark -->
+ <div style='margin-left: 28px;' class="card">
+  <div style='margin-left: 28px; margin-top: 20px;'>
+    <div style='margin-top: 10px; display: flex; justify-content: flex-end;'>
+      <a style='margin-right: 10px;' href='{% url "lesson_create" %}'>
+        <button type="button" class="btn btn-sm btn-outline-primary"><i class="bx bx-plus-medical"></i> Dars qo'shish</button>
+      </a>
+      <a href='{% url "export_guruhlar" %}'>
+        <button type="button" class="btn btn-sm btn-outline-primary"><img style='height:20px;' src='{% static 'icons/excel.png' %}'> Excel (Export) qilish</button>
+      </a>
+    </div>
+  </div>
+
+    <h5 class="card-header">Dars jadvali</h5>
+    
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li style='color: green;' class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
+    <div class="table-responsive text-nowrap">
+      <table class="table">
+        <thead class="table-dark">
+          <tr>
+            <th>Guruh nomi</th>
+            <th>Ustoz</th>
+            <th>Dars kunlari</th>
+            <th>Dars vaqti</th>
+            <th>Fan</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody class="table-border-bottom-0">
+        {% if lessons.count == 0 %}
+        <tr>
+            <td colspan="8" class="text-center">Hali siz dars jadvalini tuzganingiz yo'q 😢</td>
+        </tr>
+        {% else %}
+        {% for lesson in lessons %}
+        
+          <tr>
+            <td> <a href="{{ lesson.group.get_url }}"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{ lesson.group.name }}</strong> </a> </td>
+            
+            <td>
+              {% if lesson.group.teachers.count == 0 %}
+              O'qituvchi hali tayinlanmagan ❌
+              {% else %}
+              {% for teacher in lesson.group.teachers.all %}
+                {{ teacher.first_name }} {{ teacher.last_name }}<br>
+              {% endfor %}
+              {% endif %}
+            </td>
+            <td>
+                {% for schedule in lesson.schedules.all %}
+                {{ schedule.day }},
+                {% endfor %}
+            </td>
+            <td>
+                {% for schedule in lesson.schedules.all %}
+                {{ schedule.time }}<br>
+                {% endfor %}
+            </td>
+            <td> {% for fan in lesson.group.fan.all %} 
+                {{ fan.name }}
+                {% endfor %}
+            </td>
+            
+            <td>
+              <div class="dropdown">
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="bx bx-dots-vertical-rounded"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{% url 'lessons_update' lesson.id %}"
+                    ><i class="bx bx-edit-alt me-1"></i> Yangilash</a
+                  >
+                  <a class="dropdown-item" href="{%url 'lesson_delete' lesson.id%}"
+                  onclick="return confirm('O\'chirishni tasdiqlaysizmi? ')"  
+                  ><i class="bx bx-trash me-1"></i> O'chirish</a
+                  >
+                </div>
+              </div>
+            </td>
+          </tr>
+       
+          {% endfor %}
+          {% endif %}
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--/ Bootstrap Table with Header Dark -->
+
+{% endblock %}

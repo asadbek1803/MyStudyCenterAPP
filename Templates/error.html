@@ -1,0 +1,46 @@
+
+{% load static %}
+<style>
+    .image {
+        
+        
+        align-item: center;
+        
+
+    }
+    .button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    
+    .styled-button {
+        background-color: #269ba2; /* Yashil fon */
+        color: white; /* Oq matn */
+        padding: 12px 24px; /* Ichki bo'shliq */
+        border: none;
+        border-radius: 5px; /* Tugmaning yumaloq qirralari */
+        font-size: 16px; /* Matn hajmi */
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Yengil soyali tugma */
+        transition: background-color 0.3s ease; /* Fonda o'zgarish effekti */
+    }
+    
+    .styled-button:hover {
+        background-color: red; /* Hover holatidagi fon rangi */
+    }
+    
+    a {
+        text-decoration: none;
+    }
+</style>
+
+<div class="image">
+
+</div>
+<h1 style='color: red; text-align: center; margin-top:80px;'><img src="{% static 'assets/images/icon.ico'%}" style="inline: block; align-items: center;"> <br>500 Sizga kirish mumkin emas yoki taqiqlanadi⛔</h1>
+<h3>Har qanday hakkerlik yoki saytni buzib o'tishga urinish davlat yoki tashkilot tomonidan javobgarlikka tortilishingiz mumkin! Hamma qilgan hatti harakatidan o'zi javob beradi. Ushbu platforma har bir foydalanuvchini lokatsiya, IP manzillarini saqlab oladi. Unutmang! Siz O'zbekiston Respublikasi tomonidan javobgarlikka tortilishingiz mumkin.✋</h3>
+<p style='text-align: center;'>Xatolik bo'lsa: <b> Telegram: @coder_18_03</b> </p>
+<div class="button-container">
+   <a href="{%  url 'base_url' %}"> <button type='button' class="styled-button">>>> Bosh menyuga qaytish</button></a>
+</div>

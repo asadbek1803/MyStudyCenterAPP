@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+
+{% load static %}
+
+{% block content %}
+<style> 
+
+  .container {
+    margin-top: 20px; /* Yuqoridan bo'sh joy */
+}
+
+.alert {
+    padding: 15px; /* Ichki bo'shliq */
+    border-radius: 5px; /* Burchaklarni yumaloqlash */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* So'ya */
+    position: relative; /* Yopish tugmasi uchun */
+    margin-bottom: 10px; /* Xabarlar orasidagi bo'sh joy */
+}
+
+.alert-dismissible .btn-close {
+    position: absolute; /* Tugmani o'ng tomonga o'rnatish */
+    top: 10px; 
+    right: 10px; 
+    background: none; /* Orqa fonni o'chirish */
+    border: none; /* Ramkani olib tashlash */
+    font-size: 20px; /* Tugmaning kattaligi */
+    cursor: pointer; /* Tugmaga sichqoncha bilan bosiladigan ko'rsatkich */
+}
+
+/* Bootstrap sinflarini o'zida ishlatish */
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+
+</style>
+
+{% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<div style='margin-left: 28px;' class="card">
+    <div style='margin-left: 28px; margin-top: 20px;'>
+      <div style='margin-top: 10px; display: flex; justify-content: flex-end;'>
+        <a style='margin-right: 10px;' href='{% url "add_student" %}'>
+          <button type="button" class="btn btn-sm btn-outline-primary"><i class="bx bx-plus-medical"></i>Talaba qo'shish</button>
+        </a>
+        <a href='{% url "talabalar_download" %}'>
+          <button type="button" class="btn btn-sm btn-outline-primary"><img style='height:20px;' src='{% static 'icons/excel.png' %}'> Excel (Export) qilish</button>
+        </a>
+
+          <a style="margin-left: 10px;" href='{% url "students_score_zero" %}'>
+          <button type="button" class="btn btn-sm btn-outline-primary"><i class="bx bx-bar-chart-square"></i> Hamma o'quvchilar oylik ballarini 0 qilish</button>
+        </a>
+      </div>
+    </div>
+      <h5 class="card-header">O'quvchilar</h5>
+      
+     
+      <div class="table-responsive text-nowrap">
+        <form method="get">
+          <label for="id_status">Statusni tanlang:</label>
+          <select name="status" id="id_status">
+              <option value="all" {% if not status_filter %}selected{% endif %}>Hammasi</option>
+              <option value="False" {% if status_filter == 'False' %}selected{% endif %}>O'quv markazni tark etdi</option>
+              <option value="True" {% if status_filter == 'True' %}selected{% endif %}>O'qimoqda</option>
+          </select>
+  
+          <label for="id_guruh">Guruhini tanlang:</label>
+          <select name="guruh" id="id_guruh">
+              <option value="all" {% if not group_filter or group_filter == 'all' %}selected{% endif %}>Hammasi</option>
+              {% for group in groups %}
+              <option value="{{ group.slug }}" {% if group_filter == group.slug %}selected{% endif %}>{{ group.name }}</option>
+              {% endfor %}
+          </select>
+  
+          <button type="submit">Filtrlash</button>
+      </form>
+      </form>
+
+      
+      {% if status_filter == None %}
+      <p style='margin-top: 5px;'>Hamma o'quvchilar:<b> {{page_obj.object_list.count}} </b></p>
+      {% elif status_filter == 'False' %}
+      <p style='margin-top: 5px;'>O'quv markazni tark etgan o'quvchilar:<b> {{page_obj.object_list.count}} </b></p>
+      {% else %}
+      <p style='margin-top: 5px;'>Hozir o'qishyotgan o'quvchilar:<b> {{page_obj.object_list.count}} </b></p>
+      {% endif %}
+      <table class="table table-hover">
+          
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Ism va Familyasi</th>
+              <th>Status</th>
+              <th>Telefon raqami</th>
+              <th>Manzili</th>
+              <th>Fani</th>
+              <th>Action</th>
+              
+            </tr>
+          </thead>
+          {% if page_obj.object_list.count == 0 %}
+          <tr>
+              <td colspan="7" class="text-center">O'quvchilar hali qo'shilmagan 😢</td>
+          </tr>
+          {% else %}
+          <tbody class="table-border-bottom-0">
+              {% for student in page_obj.object_list %}
+            <tr>
+              <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{student.id}}</strong></td>
+              <td>{{student.first_name.title}} {{student.last_name.title}}</td>
+              {% if student.is_active%}
+              <td><span class="badge bg-label-primary me-1">O'qimoqda</span></td>
+              {% else %}
+              <td><span class="badge bg-label-danger me-1">O'quv markazni tark etdi</span></td>
+              {% endif %}
+
+              <td>{{student.phone}}</td>
+              {% if student.address%}
+              <td>{{student.address}}</td>
+              {% else %}
+              <td>O'quvchi manzili kiritilmagan!</td>
+              {% endif %}
+              <td> {%for fan in student.fanlar.all %}  {{fan.name}} {% endfor %}</td>
+
+
+              <td>
+                <div class="dropdown">
+                  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'edit_student' student.username %}"
+                      ><i class="bx bx-edit-alt me-1"></i> Tahrirlash</a
+                    >
+                    <a class="dropdown-item" href="#"
+                      ><i class="bx bxs-download me-1"></i> Parol va loginlarni yuklash</a
+                    >
+                    <a class="dropdown-item" href="{% url 'exit_student' student.username %}"
+                    onclick="return confirm('Amalni tasdiqlaysizmi? ')"    
+                    ><i class="bx bx-exit me-1"></i> O'quvchi markazni tark etdi</a
+                    >
+                    {% if student.user_id %}
+                    <a class="dropdown-item" href="{% url 'create_payment' student.user_id %}"
+                    onclick="return confirm('Amalni tasdiqlaysizmi? ')"    
+                    ><i class="bx bxs-wallet-alt me-1"></i> To'lov qilish</a
+                    >
+                    {% else %}
+                    <a class="dropdown-item" href="#"
+                    onclick="return confirm('To\'lov qilib bo\'lmaydi! UserID mavjud emas..')"    
+                    ><i class="bx bxs-wallet-alt me-1"></i> To'lov qilish</a
+                    >
+                    {% endif %}
+                    
+
+                    <a class="dropdown-item" href="{% url 'delete_teacher' username=student.username%}"
+                    onclick="return confirm('O\'chirishni tasdiqlaysizmi? ')"  
+                    ><i class="bx bx-trash me-1"></i> O'chirish</a
+                    >
+
+                    
+                  </div>
+                </div>
+              </td>
+            </tr>
+  
+           {% endfor %}
+           {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--/ Hoverable Table rows -->
+    <nav aria-label="Page navigation" style="margin-top: 10px;">
+      <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+              <li class="page-item">
+                  <a class="page-link" href="?guruh={{group_filter}}&status={{status_filter}}&page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                  </a>
+              </li>
+          {% endif %}
+          {% for num in page_obj.paginator.page_range %}
+              <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                  <a class="page-link" href="?guruh={{group_filter}}&status={{status_filter}}&page={{ num }}">{{ num }}</a>
+              </li>
+          {% endfor %}
+          {% if page_obj.has_next %}
+              <li class="page-item">
+                  <a class="page-link" href="?guruh={{group_filter}}&status={{status_filter}}&page={{ page_obj.next_page_number }}" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                  </a>
+              </li>
+          {% endif %}
+      </ul>
+  </nav>
+
+{% endblock %}

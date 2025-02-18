@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content%} 
+
+<form method='post' action='/export/import_groups/' enctype="multipart/form-data">{% csrf_token %}
+<div style='margin-top: 20px;' class="mb-3">
+    <label for="formFileMultiple" class="form-label">Guruh import fayl (Faqat Excel)</label>
+    <input name='excel_file' class="form-control" type="file" id="formFileMultiple" multiple />
+</div>
+
+<button type="submit" class="btn btn-primary">Import qilish</button>
+</form>
+
+{% endblock %}

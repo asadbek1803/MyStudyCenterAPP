@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+<style type="text/css">
+    body {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container bootstrap snippets bootdey">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>O'qituvchining Fanlari</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Fanlar ro'yxati</div>
+                <div class="panel-body">
+                    {% if fans %}
+                    <ul class="list-group">
+                        {% for fan in fans %}
+                        <li class="list-group-item">
+                            <h4>{{ fan.name }}</h4>
+                            <p><strong>Yaratilgan sana:</strong> Mavjud emas!</p>
+                            <p><strong>O'qituvchi:</strong> {{ fan.teacher.first_name.title }} {{fan.teacher.last_name.title}}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>Hech qanday fan mavjud emas.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="{% url 'teacher_dashboard' %}" class="btn btn-default">Ortga</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+{% endblock %}

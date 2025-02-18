@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+{% load static %}
+<html>
+	<head>
+		<title> {% block title %}{{title}}{% endblock title %} </title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="icon" type="image/x-icon" href="{% static 'assets/images/icon-removebg-preview.png' %}">
+		<link rel="stylesheet" href="{% static 'home/assets/css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'home/assets/css/noscript.css' %}" /></noscript>
+	<!-- Chatra {literal} -->
+	<script type="text/javascript">
+		var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+		(function(){
+		var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+		s1.async=true;
+		s1.src='https://embed.tawk.to/67b36e7eae4c0b190f29af7d/1ikaef81r';
+		s1.charset='UTF-8';
+		s1.setAttribute('crossorigin','*');
+		s0.parentNode.insertBefore(s1,s0);
+		})();
+		</script>
+		<style>
+			.download-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Har bir tugma orasidagi bo‘shliq */
+    margin-top: 20px;
+}
+
+.download-buttons img {
+    border-radius: 8px; /* Rasmga yumaloq burchaklar qo‘shish uchun */
+}
+		</style>
+<!-- /Chatra {/literal} -->
+	</head>
+	<body class="is-preload landing">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<header id="header">
+					<h1 id="logo"><a href="{%url 'home' %}"><img style="height: 200px; padding-bottom: 10px;" src="{% static 'assets/images/icon-removebg-preview.png'%}"></a></h1>
+					<nav id="nav">
+						<ul>
+							<li><a href="{%url 'home' %}">Bosh sahifa</a></li>
+							<li>
+								<a href="#">Qo'shimcha</a>
+								<ul>
+									<li><a href="{% url 'about' %}">Biz haqimizda</a></li>
+									<li><a href="{% url 'team' %}">Jamoa</a></li>
+									<li><a href="{% url 'vakansiyalar'%}">Vakansiyalar</a></li>
+									<li>
+										<a href="#">A'zo bo'lish</a>
+										<ul>
+											<li><a href="https://t.me/coder_18_03">Admin</a></li>
+											<li><a href="https://t.me/StudyCenterCreatorBot">O'quv markaz qo'shish</a></li>
+											
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li><a href="https://t.me/StudyCenterCreatorBot">O'quv markaz qo'shish</a></li>
+                            {% if request.user.is_authenticated %}
+                            <li><a href="{% url 'base_url' %}" class="button primary"> <i class="fa fa-sign-in" aria-hidden="true"></i> Dashboardga o'tish</a></li>
+                            {% else %}
+							<li><a href="{% url 'login' %}" class="button primary"><i class="fa fa-user" aria-hidden="true"></i>Tizimga Kirish</a></li>
+                            {% endif %}
+                        </ul>
+					</nav>
+				</header>
+
+			<!-- Banner -->
+				<section id="banner">
+					<div class="content">
+						<header>
+							<h2>Kelajak biz bilan boshlanadi!</h2>
+							<p>O'quv markazlar boshqaruvi biz bilan oson. Platforma:
+								<b>www.mystudycenter.uz</b>
+							</p>
+						</header>
+						<span class="image"><img src="{% static 'home/assets/images/teacher-new.png' %}" alt="" /></span>
+					</div>
+					<a href="#one" class="goto-next scrolly">Next</a>
+				</section>
+
+<!-- One -->
+				<section id="one" class="spotlight style1 bottom">
+					<span class="image fit main"><img src="{% static 'home/assets/images/banner.png' %}" alt="" /></span>
+					<div class="content">
+						<div class="container">
+							<div class="row">
+								<div class="col-4 col-12-medium">
+									<header>
+										<h2>Biz haqimizda?</h2>
+										<p>Platforma Junior dasturchilar tomonidan ishlab chiqildi!</p>
+									</header>
+								</div>
+								<div class="col-4 col-12-medium">
+									<p>Biz platformani Android hamda WEB ko'rinishida taqdim etamiz. Ushbu
+										Platforma o'quvchilar davomati, o'qish ballari statistik ma'lumotlar bilan 
+										birgalikda taqdim etiladi. Platformaga qo'shilish uchun Adminlar bilan bog'lanishingizni 
+										so'raymiz!
+									</p>
+								</div>
+								<div class="col-4 col-12-medium">
+									<p>Platformaga qo'shilish uchun hech qanday to'lov so'ralmaydi. Test formatida foydalanasiz
+										yoqgan taqdirda esa platformadan foydalanish uchun kontrakt tuzishingiz mumkin bo'ladi.
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<a href="#two" class="goto-next scrolly">Next</a>
+				</section>
+
+			<!-- Two -->
+				<section id="two" class="spotlight style2 right">
+					<span class="image fit main"><img src="{% static 'home/assets/images/students.png' %}" alt="" /></span>
+					<div class="content">
+						<header>
+							<h2>O'quvchilar uchun maxsus bo'lim</h2>
+							<p>Sizning o'quv markazingiz biz bilan shartnoma qilganmi?</p>
+						</header>
+						<p>Sizga shuni beramiz: oylik to'lovlarni boshqarish, imtihonlar, davomat va o'quvchi bo'limi</p>
+						<ul class="actions">
+							<li><a href="{% url 'login' %}" class="button">O'quvchi kirish</a></li>
+						</ul>
+					</div>
+					<a href="#three" class="goto-next scrolly">Next</a>
+				</section>
+
+			<!-- Three -->
+				<section id="three" class="spotlight style3 left">
+					<span class="image fit main bottom"><img src="{% static 'home/assets/images/admin.png' %}" alt="" /></span>
+					<div class="content">
+						<header>
+							<h2>O'qituvchi va adminlar uchun kirish</h2>
+							<p>Biz sizlarga Excel bilan integratsiyalashgan kuchli bazani taklif etamiz!</p>
+						</header>
+						<p>Biz bilan o'quvchi davomati, to'lovlari, imtihonlarni boshqarishingiz mumkin bo'ladi.</p>
+						<ul class="actions">
+							<li><a href="{% url 'login' %}" class="button">Admin va o'qituvchilar uchun kirish</a></li>
+						</ul>
+					</div>
+					<a href="#four" class="goto-next scrolly">Next</a>
+				</section>
+
+			<!-- Four -->
+				<section id="four" class="wrapper style1 special fade-up">
+					<div class="container">
+						<header class="major">
+							<h2>Xizmatlar</h2>
+							<p>Bizning platforma sizlarga quyidagi xizmatlarni taqdim etadi.</p>
+						</header>
+
+						<div class="box alt">
+							<div class="row gtr-uniform">
+								{% for service in services %}
+								<section class="col-4 col-6-medium col-12-xsmall">
+									<span class="icon solid alt major {{service.icon}}"></span>
+									<h3>{{service.name}}</h3>
+									<p>{{service.about}}</p>
+								</section>
+								{% endfor %}
+								{% comment %} <section class="col-4 col-6-medium col-12-xsmall">
+									<span class="icon solid alt major fa-comment"></span>
+									<h3>Bildirishnomalar</h3>
+									<p>O'quvchilarga to'lovlari haqida bildirishnomalar yuboruvchi funksiya.</p>
+								</section>
+								<section class="col-4 col-6-medium col-12-xsmall">
+									<span class="icon solid alt major fa-flask"></span>
+									<h3>Imtihonlar</h3>
+									<p>Offline imtihonlar uchun o'quvchilarni ro'yxatdan o'tkazish</p>
+								</section>
+								<section class="col-4 col-6-medium col-12-xsmall">
+									<span class="icon solid alt major fa-paper-plane"></span>
+									<h3>24/7</h3>
+									<p>Bizda qo'llab quvvatlash markazlari ham mavjud</p>
+								</section>
+								<section class="col-4 col-6-medium col-12-xsmall">
+									<span class="icon solid alt major fa-file"></span>
+									<h3>Excel bilan integratsiyalashgan</h3>
+									<p>Adminlar ma'lumotlarni excel ko'rinishida yuklab olish imkoniyatiga ega bo'lishadi</p>
+								</section>
+								<section class="col-4 col-6-medium col-12-xsmall">
+									<span class="icon solid alt major fa-lock"></span>
+									<h3>Xavfsizlik</h3>
+									<p>Akkauntlar uchun 8 xonalik raqamlardan foydalaniladi.</p>
+								</section> {% endcomment %}
+							</div>
+						</div>
+						<footer class="major">
+							<ul class="actions special">
+								<li><a href="#" class="button">Yangilanishni kuting</a></li>
+							</ul>
+						</footer>
+					</div>
+				</section>
+
+			<!-- Five -->
+				<section id="five" class="wrapper style2 special fade">
+					<div class="container">
+						<header>
+							<h2>A'zo bo'lish</h2>
+							<p>Bizning xabarlar markazimizga a'zo bo'ling va yangiliklardan xabardor bo'ling.</p>
+						</header>
+						<form method="post" action="#" class="cta">
+							{% csrf_token %}
+							<div class="row gtr-uniform gtr-50">
+								<div class="col-8 col-12-xsmall"><input type="email" name="email" id="email" placeholder="Your Email Address" /></div>
+								<div class="col-4 col-12-xsmall"><input type="submit" value="Get Started" class="fit primary" /></div>
+							</div>
+						</form>
+					</div>
+				</section>
+
+			<!-- Footer -->
+				<footer id="footer">
+					<ul class="icons">
+						<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+						<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+						<li><a href="#" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+					  <!-- App Store and Play Store Download Buttons -->
+					<div class="download-buttons">
+						<a href="{% url 'app_download' %}" target="_blank">
+							<img src="{% static 'assets/images/download2.png' %}" alt="Play Market" width="150">
+						</a>
+						<a href="{% url 'app_download'%}" target="_blank">
+							<img src="{% static 'assets/images/download3.png' %}" alt="App Store" width="150">
+						</a>
+					</div>
+
+					<ul class="copyright">
+						<li>&copy; My Study Center 2024. Dev: Asadbek Abdubannopov All rights reserved.</li>
+					</ul>
+
+				</footer>
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="{% static 'home/assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/jquery.scrolly.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/jquery.dropotron.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/jquery.scrollex.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/browser.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/breakpoints.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/util.js' %}"></script>
+			<script src="{% static 'home/assets/js/main.js' %}"></script>
+
+	</body>
+</html>

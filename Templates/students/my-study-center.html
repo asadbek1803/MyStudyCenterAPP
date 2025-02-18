@@ -1,0 +1,49 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">Mening o'quv markazim /</span> {{ study_center.name }}
+    </h4>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <h5 class="card-header">O'quv markaz ma'lumotlari</h5>
+                <div class="card-body">
+                    <div class="d-flex align-items-start align-items-sm-center gap-4">
+                        <img src="{{ study_center.logo.url }}" alt="study-center-logo" class="d-block rounded" height="100" width="100" id="uploadedAvatar" />
+                        <div class="button-wrapper">
+                            <h3 class="mb-1">{{ study_center.name }}</h3>
+                            <p class="text-muted mb-0">{{ study_center.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-0" />
+                <div class="card-body">
+                    <h5 class="mb-3">Mavjud kurslar:</h5>
+                    <div class="row">
+                        {% for course in courses %}
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ course.name }}</h5>
+                                        <p class="card-text">Ustozlar: {{ course.teacher.first_name }} {{course.teacher.last_name }} <br> <b>Telefon raqami:</b> {{course.teacher.phone}}</p>
+                                        <a href="#" class="btn btn-primary">Batafsil</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <p>Hozircha kurslar mavjud emas.</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

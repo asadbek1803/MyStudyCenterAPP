@@ -1,0 +1,548 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.small-box {
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.small-box:hover {
+    transform: scale(1.05);
+}
+
+.small-box .icon {
+    font-size: 24px; /* Ikonkaning kattaligi */
+    color: rgba(255, 255, 255, 0.8); /* Ikonkaning rangini och rangda qilish */
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    z-index: 0; /* Ikonkani boshqa elementlar ostida emas, ustida ko'rsatish */
+    opacity: 0.7; /* Ikonkaning shaffofligi */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* O'tish effektini qo'shish */
+}
+
+.small-box:hover .icon {
+    transform: scale(1.2); /* Hover vaqtida ikonkani biroz kattalashtirish */
+    opacity: 1; /* Hover vaqtida shaffoflikni kamaytirish */
+}
+
+.small-box .inner h3 {
+    font-size: 36px;
+    margin: 0;
+}
+
+.small-box .inner p {
+    font-size: 18px;
+}
+
+.bg-info {
+    background-color: #17a2b8 !important;
+    color: #fff;
+}
+
+.bg-success {
+    background-color: #28a745 !important;
+    color: #fff;
+}
+
+.bg-maroon {
+    background-color: #800000 !important;
+    color: #fff;
+}
+
+.bg-danger {
+    background-color: #dc3545 !important;
+    color: #fff;
+}
+
+/* Kartochka (card) elementi uchun styling */
+.card {
+    border-radius: 7px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #6c757d;
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px 8px 0 0;
+}
+
+.card-body {
+    padding: 20px;
+    background-color: #fff;
+}
+
+/* Tugmalar uchun styling */
+.btn-tool {
+    color: #fff;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.btn-tool:hover {
+    opacity: 1;
+}
+
+/* Responsivlik (moslashuvchanlik) uchun qo'shimcha styling */
+@media (max-width: 768px) {
+    .col-lg-3 {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .small-box .inner h3 {
+        font-size: 24px;
+    }
+
+    .small-box .inner p {
+        font-size: 16px;
+    }
+}
+
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <div class="container-fluid" style="margin-bottom:25px;">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{total_students}}</h3>
+                        <p>Jami o'quvchilar</p>
+                    </div>
+                    <div class="icon">
+                        <i class="nav-icon bx bxs-group"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{total_attendance}}</h3>
+                        <p>Jami olingan davomatlar</p>
+                    </div>
+                    <div class="icon">
+                        <i class="nav-icon bx bxs-calendar-check"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-maroon">
+                    <div class="inner">
+                        <h3>{{total_leaves}}</h3>
+                        <p>Jami chiqib ketgan o'quvchilar</p>
+                    </div>
+                    <div class="icon">
+                        <i class="nav-icon bx bxs-exit"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{total_subjects}}</h3>
+                        <p>Jami fanlar</p>
+                    </div>
+                    <div class="icon">
+                        <i class="nav-icon bx bxs-book-bookmark"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+
+      <div class="row">
+        <div class="col-lg-8 mb-4 order-0">
+          <div class="card">
+            <div class="d-flex align-items-end row">
+              {% if messages %}
+              <div class="container mt-3">
+                  {% for message in messages %}
+                      {% if message.tags == 'success'%}
+                      <div class="alert alert-success" role="alert">
+                          {{ message }}
+                      </div>
+                      {% elif message.tags == 'error'%}
+                      <div class="alert alert-danger" role="alert">
+                          {{ message }}
+                      </div>
+                     {% else %}
+                     <div class="alert alert-success" role="alert">
+                          {{ message }}
+                      </div>
+                      {% endif %}
+                  {% endfor %}
+              </div>
+          {% endif %}
+
+
+
+            </div>
+          </div>
+
+        </div>
+
+        {% if user.study_center%}
+        <div class="col-lg-4 col-md-4 order-1">
+          <div class="row">
+            <div class="col-lg-6 col-md-12 col-6 mb-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-title d-flex align-items-start justify-content-between">
+                    <div class="avatar flex-shrink-0">
+                      <img
+                        src="{% static '/assets/img/icons/unicons/chart-success.png' %}"
+                        alt="chart success"
+                        class="rounded"
+                      />
+                    </div>
+                    <div class="dropdown">
+                      <button
+                        class="btn p-0"
+                        type="button"
+                        id="cardOpt3"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                        <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                      </div>
+                    </div>
+                  </div>
+                  <span class="fw-semibold d-block mb-1">Jami daromad</span>
+                  <h3 class="card-title mb-2">{{total_payments}} so'm</h3>
+                  <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +72.80%</small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+        </div>
+        <div class="col-lg-6 col-md-12 col-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title d-flex align-items-start justify-content-between">
+                <div class="flex-shrink-0">
+                  {% if reklama %}
+                   <img
+                    style="width; 100px; height: 100px;"
+                    src="{{reklama.image.url}}"
+                    alt="reklama"
+                    class="rounded"
+                  />
+                  {% endif %}
+
+                </div>
+                <div class="dropdown">
+                  <button
+                    class="btn p-0"
+                    type="button"
+                    id="cardOpt3"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                    <a class="dropdown-item" href="{{reklama.url}}">Tashrif buyurish</a>
+                    {% if user.is_premium == True %}
+                    <a class="dropdown-item" href="success8">Reklamani yopish❌</a>
+                    {% else %}
+                    <a class="dropdown-item" href="javascript:void(0);" onclick="return alert('Siz premium ta\'rifga a\'zo bo\'lmagansiz!')">Reklamani yopish❌</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              {% if reklama %}
+              <span class="fw-semibold d-block mb-1">{{reklama.name}}</span>
+              {% else %}
+              <span class="fw-semibold d-block mb-1">Bu yerda sizning reklamangiz bo'lishi mumkin edi!</span>
+              {% endif %}
+              <h3 class="card-title mb-2">Reklama berish xizmati</h3>
+              <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> Telegram: @coder_18_03</small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+        {% comment %}
+        Dars jadvali
+
+        {% endcomment %}
+
+
+        <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
+          <div class="card">
+            <div class="row row-bordered g-0">
+              <div class="col-md-8">
+                <h5 class="card-header m-0 me-2 pb-3">O'quvchilar qo'shilish jadvali</h5>
+                <div id="totalRevenueChart" class="px-2">
+                  <canvas id="studentsChart"></canvas>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-body">
+                  <div class="text-center">
+                    <div class="dropdown">
+                      <button
+                        class="btn btn-sm btn-outline-primary dropdown-toggle"
+                        type="button"
+                        id="growthReportId"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        {{ selected_year }}
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="growthReportId">
+                        {% for year in years %}
+                          <a class="dropdown-item" href="?year={{ year }}">{{ year }}</a>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="growthChart"></div>
+                <div class="text-center fw-semibold pt-3 mb-2">None% o'sish</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!--/ Total Revenue -->
+        <div class="col-12 col-md-8 col-lg-4 order-3 order-md-2">
+
+            <!-- </div>
+<div class="row"> -->
+            <div class="col-12 mb-4">
+
+
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Order Statistics -->
+        <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-4">
+          <div class="card h-100" style="left:20px;">
+            <div class="card-header d-flex align-items-center justify-content-between pb-0">
+              <div class="card-title mb-0">
+                <h5 class="m-0 me-2">O'quvchilar</h5>
+                <small class="text-muted">Jami: {{total_students}}</small>
+              </div>
+              <div class="dropdown">
+                <button
+                  class="btn p-0"
+                  type="button"
+                  id="orederStatistics"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="bx bx-dots-vertical-rounded"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                  <a class="dropdown-item" href="javascript:void(0);">Select All</a>
+                  <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
+                  <a class="dropdown-item" href="javascript:void(0);">Share</a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex flex-column align-items-center gap-1">
+                  <h2 class="mb-2">{{total_students}}</h2>
+                  <span>Mavjud fanlar</span>
+                </div>
+                <div id="orderStatisticsChart"></div>
+              </div>
+              <ul class="p-0 m-0">
+                {% for fan in fanlar %}
+                <li class="d-flex mb-4 pb-1">
+                  <div class="avatar flex-shrink-0 me-3">
+                    <span class="avatar-initial rounded bg-label-primary"
+                      ><i class="bx bx"></i
+                    ></span>
+                  </div>
+                  <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                    <div class="me-2">
+                      <h6 class="mb-0">{{fan.name}}</h6>
+                      <small class="text-muted">{{fan.teacher_name}}</small>
+                    </div>
+                    <div class="user-progress">
+                      <small class="fw-semibold">{{fan.student_count}}</small>
+                    </div>
+                  </div>
+                </li>
+                {% endfor %}
+
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-4">
+          <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between pb-0">
+              <div class="card-title mb-0">
+                <h5 class="m-0 me-2">Dars jadvali</h5>
+                <small class="text-muted">Bugungi o'tiladigan jami darslar: {{lessons.count}}</small>
+              </div>
+              <div class="dropdown">
+                <button
+                  class="btn p-0"
+                  type="button"
+                  id="orederStatistics"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="bx bx-dots-vertical-rounded"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                  <a class="dropdown-item" href="javascript:void(0);">Select All</a>
+                  <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
+                  <a class="dropdown-item" href="javascript:void(0);">Share</a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex flex-column align-items-center gap-1">
+                  <h2 class="mb-2">{{lessons.count}}</h2>
+                  <span>Guruhlar va vaqtlari</span>
+                </div>
+                <div id="orderStatisticsChart"></div>
+              </div>
+              <ul class="p-0 m-0">
+                {% if lessons.count == 0 %}
+                <h6 class="mb-0" style='text-align: center; margin-top: 50px;'>Bugun hech qanday darslar yo'q 😢</h6>
+                {% else %}
+                {% for lesson in lessons %}
+                <li class="d-flex mb-4 pb-1">
+                  <div class="avatar flex-shrink-0 me-3">
+                    <span class="avatar-initial rounded bg-label-primary"
+                      ><i class="bx bx"></i
+                    ></span>
+                  </div>
+                  <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                    <div class="me-2">
+
+                      <h6 class="mb-0">{{lesson.lesson.group.name}} -></h6>
+                      <small class="text-muted"><b> Dars vaqti:</b> {{lesson.time}}</small>
+                      <br>
+                      <small class="text-muted"><b> O'qituvchilar:</b>{% if lesson.lesson.group.teachers.count == 0%} O'qituvchi hali tayinlanmagan❌ {% else %} {% for teacher in lesson.lesson.group.teachers.all %} {{teacher.first_name}} {{teacher.last_name}} <br> {% endfor %} {% endif %}</small>
+                    </div>
+                    <div class="user-progress">
+                      <small class="fw-semibold">
+                        Fan:
+                        {% for fan in lesson.lesson.group.fan.all %}
+                        {{ fan.name }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                        Fanlar belgilanmagan
+                        {% endfor %}</small>
+                    </div>
+                  </div>
+                </li>
+                {% endfor %}
+                {% endif %}
+
+              </ul>
+            </div>
+          </div>
+      {% else %}
+      <h1 style='text-align: center;'>Sizda hali o'quv markaz qo'shilmagan 😢</h1>
+      {% endif %}
+
+        <!--/ Order Statistics -->
+
+          <!-- Order Statistics -->
+
+
+
+        <!-- Expense Overview -->
+
+
+        <!--/ Expense Overview -->
+
+        <!-- Transactions -->
+
+      </div>
+    </div>
+    <script>
+      // Backenddan kelgan ma'lumotlarni olish
+var months = {{ months|safe }};
+var monthly_totals = {{ monthly_totals|safe }};
+
+// Oy nomlarini belgilash (1 dan 12 gacha)
+var monthNames = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'];
+
+// months qiymatlarini oy nomlariga o'zgartirish
+var monthLabels = months.map(function(month) {
+    // month qiymati 1 dan 12 gacha bo'lib keladi, bu indeks bilan ishlashda 1ni ayiramiz
+    return monthNames[month - 1];
+});
+
+// Chart.js diagrammasini yaratish
+var ctx = document.getElementById('studentsChart').getContext('2d');
+var studentsChart = new Chart(ctx, {
+    type: 'bar',  // yoki 'line' turi bilan almashtirishingiz mumkin
+    data: {
+        labels: monthLabels,  // Oylik nomlar ro'yxati
+        datasets: [{
+            label: 'O\'quvchilar soni',
+            data: monthly_totals,  // Oylik o'quvchilar soni
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+    </script>
+    <!-- / Content -->
+
+{% endblock %}

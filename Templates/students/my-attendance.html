@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Mening Davomatim</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Davomat haqida</h5>
+                    <p class="card-text">Umumiy darslar: <strong>{{ total_classes }}</strong></p>
+                    <p class="card-text">Qoldirgan darslar: <strong>{{ missed_classes }}</strong></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-success">
+                <div class="card-body">
+                    <h5 class="card-title">Davomat foizlari</h5>
+                    <p class="card-text">Kelish foizi: <span class="text-success"><strong>{{ attended_percentage|floatformat:2 }}%</strong></span></p>
+                    <p class="card-text">Qoldirish foizi: <span class="text-danger"><strong>{{ missed_percentage|floatformat:2 }}%</strong></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if attendances %}
+    <div class="table-responsive mt-4">
+        <table class="table table-hover table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Sana</th>
+                    <th>Davomat holati</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attendance in attendances %}
+                <tr>
+                    <td>{{ attendance.date|date:"Y-m-d" }}</td>
+                    <td>
+                        {% if attendance.is_present %}
+                            <span class="badge badge-success p-2">Kelgan</span>
+                        {% else %}
+                            <span class="badge badge-danger p-2">Kelmagan</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning mt-4">
+        Hozircha davomat ma'lumotlari mavjud emas.
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .card {
+        margin-top: 10px;
+        padding: 20px;
+    }
+    .card-title {
+        font-size: 1.25rem;
+    }
+    .card-text {
+        font-size: 1.1rem;
+    }
+    .badge {
+        font-size: 1rem;
+    }
+    table thead th {
+        font-size: 1.1rem;
+        text-transform: uppercase;
+    }
+    table tbody td {
+        font-size: 1rem;
+    }
+</style>
+{% endblock %}

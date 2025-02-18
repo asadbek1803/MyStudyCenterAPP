@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content%}
+
+{% comment %} This is added for group {% endcomment %}
+<form method='post' action='/center/add/guruh/' enctype='multipart/form-data'> {% csrf_token %}
+  {% if messages %}
+      <div class="container mt-3">
+          {% for message in messages %}
+              {% if message.tags == 'success'%}
+              <div class="alert alert-success" role="alert">
+                  {{ message }}
+              </div>
+              {% elif message.tags == 'error'%}
+              <div class="alert alert-danger" role="alert">
+                  {{ message }}
+              </div>
+              {% endif %}
+          {% endfor %}
+      </div>
+    {% endif %}
+  <div style='margin-left: 28px;' class="card mb-4">
+    
+  <h5 class="card-header">Guruh qo'shish</h5>
+    
+    <div class="card-body">
+      <div class="mb-3 row">
+        <label for="html5-text-input" class="col-md-2 col-form-label">Guruh nomi</label>
+        <div class="col-md-10">
+          <input name='name' class="form-control" type="text" value="Example: 029-spez" id="html5-text-input" />
+        </div>
+      </div>
+      <div style='margin-top: 20px;' class="input-group">
+        <span class="input-group-text">Guruh haqida (Optional)</span>
+        <textarea name='description' class="form-control" aria-label="With textarea" placeholder="Comment"></textarea>
+      </div>
+      <div style='margin-top: 20px;' class="mb-3">
+        <label for="formFileMultiple" class="form-label">Guruh uchun logo (Optional)</label>
+        <input name='logo' class="form-control" type="file" id="formFileMultiple" multiple />
+      </div>
+      <div>
+        
+        <div class="mt-2 mb-3">
+          <label for="largeSelect" class="form-label">Ustoz</label>
+          <select name='teacher' id="largeSelect" class="form-select form-select-lg">
+
+            <option value=''>Tanlash uchun bosing</option>
+            {% for teacher in teachers %}
+            <option value="{{teacher.id}}">{{teacher.first_name}} {{teacher.last_name}}</option>
+           
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mt-2 mb-3">
+          <label for="largeSelect" class="form-label">Fanlar</label>
+          <select name='fan' id="largeSelect" class="form-select form-select-lg">
+
+            <option value=''>Qaysi fan o'qitiladi?</option>
+            {% for fan in fanlar %}
+            <option value="{{fan.id}}">{{fan.name}}</option>
+           
+            {% endfor %}
+          </select>
+          <div style='color: red;'> {{error}} </div>
+          <div style='margin-top: 20px;' class="col-sm-10">
+            <button type="submit" class="btn btn-primary">Qo'shish</button>
+          </div>
+        </div>
+      {% comment %} Tegma {% endcomment %}
+      
+      
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %}
+

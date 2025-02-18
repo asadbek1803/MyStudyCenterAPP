@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Imtihon Natijalari</h2>
+
+    <h3>Umumiy ball: {{ total_score }}</h3>
+
+    <canvas id="examResultsChart"></canvas>
+
+    <table class="table table-striped mt-4">
+        <thead class="thead-dark">
+            <tr>
+                <th>Imtihon</th>
+                <th>Ball</th>
+                <th>Sana</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results_data %}
+            <tr>
+                <td>{{ result.exam_name }}</td>
+                <td>{{ result.score }}</td>
+                <td>{{ result.date|date:"Y-m-d" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('examResultsChart').getContext('2d');
+        const labels = [];
+        const scores = [];
+
+        {% for result in results_data %}
+        labels.push('{{ result.exam_name }}');
+        scores.push({{ result.score }});
+        {% endfor %}
+
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Imtihon natijalari',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                data: scores,
+                fill: true,
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Ball'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Imtihonlar'
+                        }
+                    }
+                }
+            }
+        };
+
+        const examResultsChart = new Chart(ctx, config);
+    });
+</script>
+{% endblock %}

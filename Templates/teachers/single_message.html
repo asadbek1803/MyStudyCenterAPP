@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+<style type="text/css">
+    body {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container bootstrap snippets bootdey">
+    <div class="row">
+        <div class="col-sm-10">
+            <h1>{{ selected_sender.username }} dan xabarlar</h1>
+        </div>
+        <div class="col-sm-2">
+            {% if selected_sender.profile_image %}
+            <a href="{{ selected_sender.get_absolute_url }}" class="pull-right">
+                <img title="profile image" class="img-circle img-responsive" src="{{ selected_sender.profile_image.url }}" alt=""/>
+            </a>
+            {% else %}
+            <a href="{{ selected_sender.get_absolute_url }}" class="pull-right">
+                <img title="profile image" class="img-circle img-responsive" src="{% static 'icons/avatar.png' %}" />
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12">
+            {% for message in notifications %}
+            <div class="panel panel-default">
+                <div class="panel-heading">Xabar ma'lumoti</div>
+                <div class="panel-body">
+                    <p><strong>Mavzu:</strong> {{ message.subject }}</p>
+                    <p><strong>Xabar:</strong> {{ message.message }}</p>
+                    <p><strong>Yuborilgan vaqti:</strong> {{ message.sending_date }}</p>
+                    <p><strong>Status:</strong> {% if message.is_read %} O'qilgan✅ {% else %} O'qilmagan❌ {% endif %} 
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="{% url 'get_notification' %}" class="btn btn-primary">Ortga</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+{% endblock %}

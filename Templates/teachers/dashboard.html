@@ -1,0 +1,311 @@
+{% extends 'base.html '%}
+
+{% load static %}
+
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  .container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.small-box {
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.small-box:hover {
+    transform: scale(1.05);
+}
+
+.small-box .icon {
+    font-size: 24px; /* Ikonkaning kattaligi */
+    color: rgba(255, 255, 255, 0.8); /* Ikonkaning rangini och rangda qilish */
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    z-index: 0; /* Ikonkani boshqa elementlar ostida emas, ustida ko'rsatish */
+    opacity: 0.7; /* Ikonkaning shaffofligi */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* O'tish effektini qo'shish */
+}
+
+.small-box:hover .icon {
+    transform: scale(1.2); /* Hover vaqtida ikonkani biroz kattalashtirish */
+    opacity: 1; /* Hover vaqtida shaffoflikni kamaytirish */
+}
+
+.small-box .inner h3 {
+    font-size: 36px;
+    margin: 0;
+}
+
+.small-box .inner p {
+    font-size: 18px;
+}
+
+.bg-info {
+    background-color: #17a2b8 !important;
+    color: #fff;
+}
+
+.bg-success {
+    background-color: #28a745 !important;
+    color: #fff;
+}
+
+.bg-maroon {
+    background-color: #800000 !important;
+    color: #fff;
+}
+
+.bg-danger {
+    background-color: #dc3545 !important;
+    color: #fff;
+}
+
+/* Kartochka (card) elementi uchun styling */
+.card {
+    border-radius: 7px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #6c757d;
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px 8px 0 0;
+}
+
+.card-body {
+    padding: 20px;
+    background-color: #fff;
+}
+
+/* Tugmalar uchun styling */
+.btn-tool {
+    color: #fff;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.btn-tool:hover {
+    opacity: 1;
+}
+
+/* Responsivlik (moslashuvchanlik) uchun qo'shimcha styling */
+@media (max-width: 768px) {
+    .col-lg-3 {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .small-box .inner h3 {
+        font-size: 24px;
+    }
+
+    .small-box .inner p {
+        font-size: 16px;
+    }
+}
+
+      
+</style>
+    {% if messages %}
+<!-- Pop-up xabarnoma -->
+    {% for message in messages %}
+    <div class="alert {{message.tags}} alert-dismissible fade show custom-alert" role="alert">
+
+        <strong>{{message}}</strong>
+
+        <button type="button" class="close" data-dismiss="alert" aria-label="Yopish">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endfor %}
+{% endif %}
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{total_students}}</h3>
+                        <p>Jami o'quvchilar</p>
+                    </div>
+                    <div class="icon">
+                        <i class="nav-icon bx bxs-group"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{total_attendance}}</h3>
+                        <p>Jami olingan davomatlar</p>
+                    </div>
+                    <div class="icon">
+                        <i class="nav-icon bx bxs-calendar-check"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-maroon">
+                    <div class="inner">
+                        <h3>{{total_leave}}</h3>
+                        <p>Jami chiqib ketgan o'quvchilar</p>
+                    </div>
+                    <div class="icon">
+                        <i class="nav-icon bx bxs-exit"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{total_subjects}}</h3>
+                        <p>Jami fanlar</p>
+                    </div>
+                    <div class="icon">
+                        <i class="nav-icon bx bxs-book-bookmark"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+
+        <h3 style='text-align: center; margin-top: 15px;'>Mening o'quv markazim: {{request.user.study_center.name}} </h3>
+        <p style='text-align: center; margin-top: 15px;'>Manzil: {{request.user.study_center.address}}</p>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">Qo'shilgan o'quvchilar</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">O'quvchilar</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myChart2"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Bootstrap JS, jQuery va Popper.js -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+        // Xabarnomani 5 soniyadan so'ng avtomatik yo'q qilish
+        setTimeout(function () {
+            $('.custom-alert').alert('close');
+        }, 5000); // 5000 millisekund (5 soniya)
+</script>
+<script>
+    const ctx = document.getElementById('myChart');
+    const dates = {{ dates|safe }};
+    const counts = {{ counts|safe }};
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: '# qo\'shilganlar raqami',
+                data: counts,
+                borderWidth: 1,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                hoverBackgroundColor: 'rgba(75, 192, 192, 0.4)'
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const ctx2 = document.getElementById('myChart2').getContext('2d');
+    const labels = {{ labels|safe }};
+    const data = {{ group_data|safe }};
+    new Chart(ctx2, {
+        type: 'pie',  // Use 'pie' as the chart type
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'O\'quvchilar soni',
+                data: data,
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)'
+                ],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    enabled: true
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

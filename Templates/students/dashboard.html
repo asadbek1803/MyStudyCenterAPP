@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .container-fluid {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .small-box {
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        text-align: center;
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .small-box:hover {
+        transform: scale(1.05);
+    }
+    .small-box .inner {
+        padding: 20px;
+    }
+    .small-box .icon {
+        font-size: 50px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        opacity: 0.3;
+    }
+    .bg-info { background-color: #17a2b8; color: #fff; }
+    .bg-success { background-color: #28a745; color: #fff; }
+    .bg-warning { background-color: #ffc107; color: #fff; }
+    .bg-danger { background-color: #dc3545; color: #fff; }
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+        padding: 15px;
+    }
+    .card-body {
+        padding: 20px;
+    }
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+    }
+    .table th,
+    .table td {
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="container-fluid">
+        {% if messages %}
+            <div class="container-fluid">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ total_courses }}</h3>
+                        <p>Mening kurslarim</p>
+                    </div>
+                    <div class="icon">
+                        <i class="bx bx-book"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ attendance_percentage }}%</h3>
+                        <p>Davomat</p>
+                    </div>
+                    <div class="icon">
+                        <i class="bx bx-calendar-check"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>0{{ upcoming_assignments }}</h3>
+                        <p>Kelgusi topshiriqlar</p>
+                    </div>
+                    <div class="icon">
+                        <i class="bx bx-task"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{ notifications_list.count }}</h3>
+                        <p>Yangi xabarlar</p>
+                    </div>
+                    <div class="icon">
+                        <i class="bx bx-bell"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Mening dars jadvalim</h3>
+                    </div>
+
+                <div class="row">
+                    {% for day in schedule %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                {{ day.day }} - {{ day.date|date:"d.m.Y" }}
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                {% for lesson in day.lessons %}
+                                <li class="list-group-item">
+                                    <strong>{{ lesson.time|time:"H:i" }}</strong> -
+                                    {{ lesson.lesson.group.name }}
+                                    ({{ lesson.lesson.group.fan.all|join:", " }})
+                                </li>
+                                {% empty %}
+                                <li class="list-group-item">Dars yo'q</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                         {% endfor %}
+                </div>
+                </div>
+            </div>
+            <h2 class="mt-4">So'nggi imtihon natijalari</h2>
+    <div class="row">
+        {% for result in latest_results %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ result.exam.name }}</h5>
+                    <p class="card-text">Sana: {{ result.exam.date }}</p>
+                    <p class="card-text">Umumiy ball: {{ result.total_score }}</p>
+                    <p class="card-text">Foiz: {{ result.percentage|floatformat:2 }}%</p>
+                    <h6>Fanlar bo'yicha natijalar:</h6>
+                    <ul>
+                        {% for subject, score in result.results.items %}
+                        <li>{{ subject }}: {{ score|floatformat:2 }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>Hali imtihon natijalari mavjud emas.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2 class="mt-4">Kelgusi imtihonlar</h2>
+    <div class="row">
+        {% for exam in upcoming_exams %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ exam.name }}</h5>
+                    <p class="card-text">Sana: {{ exam.date }}</p>
+                    <p class="card-text">Vaqt: {{ exam.start_time }} - {{ exam.end_time }}</p>
+                    <h6>Fanlar:</h6>
+                    <ul>
+                        {% for fan in exam.fans.all %}
+                        <li>{{ fan.name }} ({{ fan.ball }} ball)</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>Yaqin kelajakda rejalashtirilgan imtihonlar yo'q.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Kelgusi topshiriqlar</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for assignment in upcoming_assignments_list %}
+                            <li class="list-group-item">
+                                <h5>{{ assignment.title }}</h5>
+                                <p>Topshirish muddati: {{ assignment.due_date }}</p>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item">Hozircha topshiriqlar yo'q</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Yangi xabarlar</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for notification in notifications_list %}
+                            <li class="list-group-item">
+                                <h5>{{ notification.title }}</h5>
+                                <p>{{ notification.message }}</p>
+                                <small>{{ notification.date }}</small>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item">Yangi xabarlar yo'q</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

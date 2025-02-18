@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4>{{ student.first_name }} {{ student.last_name }} uchun to'lov qilish</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="subject" class="form-label">Fan tanlash:</label>
+                            <select class="form-control" id="subject" name="subject" required>
+                                <option value="">Fan tanlang</option>
+                                {% for subject in subjects %}
+                                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="amount" class="form-label">To'lov miqdori:</label>
+                            <input type="text" class="form-control" id="amount" name="amount" placeholder="To'lov miqdorini kiriting" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="type">To'lov turi:</label>
+                            <select class="form-control" id="type" name="type">
+                                <option value="MAHSULOTGA">Mahsulotga</option>
+                                <option value="OYLIK TO'LOV UCHUN">Oylik to'lov uchun</option>
+                            </select>
+                        </div>
+                        <br>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-block">To'lovni amalga oshirish</button>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+            {% if messages %}
+                <div class="mt-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

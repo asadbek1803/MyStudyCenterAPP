@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h5>Noqulaylik uchun uzr so'raymiz!</h5>
+
+<p> AM: 12:00 AM - yarim tun, 1:00 AM - ertalab 1, 11:00 AM - ertalab 11.<br>
+    PM: 12:00 PM - tushlik, 1:00 PM - tushdan keyin 1, 11:00 PM - kechki 11.</p>
+<div class="container mt-5">
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <h2 class="mb-4">Imtihon yaratish</h2>
+
+        <div class="form-group mb-3">
+            <label for="exam_name" class="form-label">Imtihon nomi:</label>
+            <input type="text" name="exam_name" class="form-control" required>
+            <div class="invalid-feedback">Iltimos, imtihon nomini kiriting.</div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="exam_date" class="form-label">Imtihon sanasi:</label>
+            <input type="date" name="exam_date" class="form-control" required>
+            <div class="invalid-feedback">Iltimos, imtihon sanasini kiriting.</div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="start_time" class="form-label">Boshlanish vaqti:</label>
+                <input type="time" name="start_time" class="form-control" required>
+                <div class="invalid-feedback">Iltimos, boshlanish vaqtini kiriting.</div>
+            </div>
+            <div class="col-md-6">
+                <label for="end_time" class="form-label">Tugash vaqti:</label>
+                <input type="time" name="end_time" class="form-control" required>
+                <div class="invalid-feedback">Iltimos, tugash vaqtini kiriting.</div>
+            </div>
+        </div>
+
+        <h3 class="mb-3">Fanlar</h3>
+        <div id="fan_fields" class="mb-3">
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label for="fan_name" class="form-label">Fan nomi:</label>
+                    <input type="text" name="fan_name" class="form-control" required>
+                    <div class="invalid-feedback">Iltimos, fan nomini kiriting.</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="fan_score" class="form-label">Maksimal ball:</label>
+                    <input type="number" name="fan_score" step="0.1" min="0" class="form-control" required>
+                    <div class="invalid-feedback">Iltimos, maksimal ballni kiriting.</div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-secondary mb-4" onclick="addFanField()">Yangi fan qo'shish</button>
+
+        {% if existing_fans %}
+            <h3 class="mb-3">Eski fanlar mavjud</h3>
+            <p>Eski fanlar saqlansinmi yoki o'chirib yangilarini kiritilsinmi?</p>
+            <div class="d-flex justify-content-between">
+                <button type="submit" name="keep_fans" class="btn btn-success">Eski fanlarni saqlash</button>
+                <button type="submit" name="replace_fans" class="btn btn-danger">Eski fanlarni o'chirish va yangilash</button>
+            </div>
+        {% else %}
+            <button type="submit" class="btn btn-primary">Imtihonni yaratish</button>
+        {% endif %}
+    </form>
+</div>
+
+<script>
+    // Yangi fan qo'shish funksiyasi
+    function addFanField() {
+        const fanFields = document.getElementById('fan_fields');
+        const newField = document.createElement('div');
+        newField.className = "row mb-2";
+        newField.innerHTML = `
+            <div class="col-md-6">
+                <label for="fan_name" class="form-label">Fan nomi:</label>
+                <input type="text" name="fan_name" class="form-control" required>
+                <div class="invalid-feedback">Iltimos, fan nomini kiriting.</div>
+            </div>
+            <div class="col-md-6">
+                <label for="fan_score" class="form-label">Maksimal ball:</label>
+                <input type="number" name="fan_score" step="0.1" min="0" class="form-control" required>
+                <div class="invalid-feedback">Iltimos, maksimal ballni kiriting.</div>
+            </div>
+        `;
+        fanFields.appendChild(newField);
+    }
+
+    // Bootstrap form validation
+    (function () {
+        'use strict'
+
+        const forms = document.querySelectorAll('.needs-validation')
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <br>
+    <h1>Guruhlar Ro'yxati</h1>
+
+    <div class="table-responsive text-nowrap">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Guruh nomi</th>
+                    <th>O'quvchilar soni</th>
+                    <th>Harakatlar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for group in groups %}
+                    <tr>
+                        <td><a href="{% url 'group_rating' group.slug %}">{{ group.name }}</a></td>
+                        <td>{{ group.students.count }}</td>
+                        <td>
+                            <a href="{% url 'group_rating' group.slug %}" class="btn btn-primary">Reytingni ko'rish</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

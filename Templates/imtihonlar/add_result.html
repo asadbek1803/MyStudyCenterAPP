@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student Result</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Group Select Field -->
+        <div class="form-group">
+            <label for="group">Guruhni tanlang:</label>
+            <select name="group" id="group" onchange="getStudentsByGroup()" required>
+                <option value="">-- Guruh tanlang --</option>
+                {% for group in groups %}
+                    <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Student Select Field -->
+        <div class="form-group">
+            <label for="student">O'quvchini tanlang:</label>
+            <select name="student" id="student" onchange="getStudentSubjects()" required>
+                <option value="">-- O'quvchini tanlang --</option>
+                <!-- O'quvchilar dinamik tarzda yuklanadi -->
+            </select>
+        </div>
+
+        <!-- Checker Field (disabled) -->
+        <div class="form-group">
+            <label for="checker">O'qituvchi (Tekshiruvchi/Moderator):</label>
+            <input type="text" name="checker" id="checker" value="{{ request.user.username }}" disabled>
+            <input type="hidden" name="checker_hidden" value="{{ request.user.id }}">
+        </div>
+
+        <!-- Exam Select Field -->
+        <div class="form-group">
+            <label for="exam">Imtihonni tanlang:</label>
+            <select name="exam" id="exam" required>
+                <option value="">-- Imtihonni tanlang --</option>
+                {% for exam in exams %}
+                    <option value="{{ exam.id }}">{{ exam.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Student subjects (fanlar) -->
+        <div id="student-subjects"></div>  <!-- Fanlar uchun joy -->
+
+        <!-- Submit Button -->
+        <button type="submit">Natijalarni saqlash</button>
+    </form>
+
+    <script>
+    function getStudentsByGroup() {
+        var groupId = document.getElementById('group').value;
+
+        if (groupId) {
+            // AJAX so'rovi orqali o'quvchilarni olish
+            fetch(`/exams/get-students-by-group/${groupId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    var studentSelect = document.getElementById('student');
+                    studentSelect.innerHTML = '';  // Tozalash
+                    studentSelect.innerHTML += '<option value="">-- O\'quvchini tanlang --</option>'; // Default option
+
+                    data.students.forEach(function(student) {
+                        var option = `<option value="${student.id}">${student.first_name} ${student.last_name}</option>`;
+                        studentSelect.innerHTML += option;
+                    });
+                })
+                .catch(error => console.log(error));
+        } else {
+            document.getElementById('student').innerHTML = '';  // Agar guruh tanlanmasa, bo'sh qoldirish
+            document.getElementById('student-subjects').innerHTML = '';  // Fanlar joyini tozalash
+        }
+    }
+
+    function getStudentSubjects() {
+    var studentId = document.getElementById('student').value;
+
+    if (studentId) {
+        fetch(`/exams/get-student-subjects/${studentId}/`)
+            .then(response => response.json())
+            .then(data => {
+                var subjectsDiv = document.getElementById('student-subjects');
+                subjectsDiv.innerHTML = '';  // Tozalash
+
+                data.fanlar.forEach(function(subject) {
+                    var input = `
+                        <div class="form-group">
+                            <label for="subject_${subject.id}">${subject.name}:</label>
+                            <input type="float" name="subject_${subject.id}" id="subject_${subject.id}" placeholder="Natija kiriting" required>
+                        </div>
+                    `;
+                    subjectsDiv.innerHTML += input;
+                });
+            })
+            .catch(error => console.log(error));
+    } else {
+        document.getElementById('student-subjects').innerHTML = '';  // Agar o'quvchi tanlanmasa, bo'sh qoldirish
+    }
+}
+    </script>
+</div>
+</body>
+{% endblock %}

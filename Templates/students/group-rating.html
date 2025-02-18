@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <br>
+    <h1>{{ group.name }} Reytingi</h1>
+
+    {% if ratings %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>O'quvchi</th>
+                    <th>Oylik Ball</th>
+                    <th>Reyting</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student, rank in ratings.items %}
+                    <tr {% if student == request.user %}style="font-weight: bold;"{% endif %}>
+                        <td>{{ student.first_name }} {{ student.last_name }}</td>
+                        <td>{{ student.month_score }}</td>
+                        <td>{{ rank }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Guruhda hech qanday o'quvchi yo'q.</p>
+    {% endif %}
+
+    {% if user_rank %}
+        <p>Sizning reytingingiz: <strong>{{ user_rank }}</strong></p>
+    {% else %}
+        <p>Siz guruhda yo'q yoki reytingingiz ko'rsatilmagan.</p>
+    {% endif %}
+     <a href="{% url 'my_groups' %}" class="btn btn-primary">Orqaga</a>
+</div>
+{% endblock %}

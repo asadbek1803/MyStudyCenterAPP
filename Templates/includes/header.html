@@ -1,0 +1,491 @@
+{% load static %}
+
+
+
+
+<style>
+  .menu-item {
+    position: relative; /* Ensure the badge is positioned relative to the menu item */
+  }
+  
+  .menu-link {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .notification-badge {
+    background-color: #dc3545; /* Red background for the notification */
+    color: white; /* White text color */
+    font-size: 6px; /* Font size */
+    padding: 1px 1px; /* Padding for the badge */
+    border-radius: 9px; /* Rounded corners */
+    position: absolute; /* Position relative to parent */
+    top: 50%; /* Center vertically */
+    top:10px;
+    left: 33px; /* Align to the right of the icon */
+    transform: translate(-50%, -50%); /* Offset position to center vertically and horizontally */
+    z-index: 1; /* Ensure it's on top */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 15px; /* Minimum width to handle single-digit notifications */
+    height: 15px; /* Fixed height */
+  }
+  
+  .menu-link:hover .notification-badge {
+    background-color: #c82333; /* Darker red on hover */
+  }
+  
+  .submenu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 40px;
+    display: none; /* Initially hidden */
+  }
+  
+  .submenu-item {
+    margin-top: 10px;
+  }
+  
+  .submenu-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .submenu-link:hover {
+    color: #269ba2; /* Change to the color you prefer */
+  }
+
+</style>
+
+<script> function toggleSubmenu(event) {
+  event.preventDefault(); // Prevent default anchor behavior
+  const submenu = event.currentTarget.nextElementSibling; // Get the next sibling element (the submenu)
+  if (submenu) {
+      submenu.style.display = submenu.style.display === 'none' ? 'block' : 'none';
+  }
+}
+
+
+function updateNotificationCount(newCount) {
+  const badge = document.querySelector('.notification-badge');
+  if (badge) {
+      badge.textContent = newCount;
+      badge.style.display = newCount > 0 ? 'block' : 'none';
+  }
+}
+
+</script>
+<div class="menu-inner-shadow"></div>
+
+<ul class="menu-inner py-1">
+  <!-- Dashboard -->
+  {% if user.role == 'student'%}
+   <li class="menu-item {% if request.resolver_match.url_name == 'student' %}active{% endif %}">
+    <a href="{%url 'student'%}" class="menu-link">
+      <i class="menu-icon tf-icons bx bx-home-circle"></i>
+      <div data-i18n="Tables">Asosiy bo'lim</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'my_study_center' %}active{% endif %}">
+    <a href="{% url 'my_study_center' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-school"></i>
+      <div data-i18n="Analytics">Mening o'quv markazim</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'my_groups' %}active{% endif %}">
+    <a href="{% url 'my_groups' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-pie-chart-alt-2"></i>
+      <div data-i18n="Analytics">Reyting</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'my_attendance_student' %}active{% endif %}">
+    <a href="{% url 'my_attendance_student' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-user-check">
+      </i>
+      <div data-i18n="Analytics">Davomatim</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'exam_results_student' %}active{% endif %}">
+    <a href="{% url 'exam_results_student' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bx-bar-chart-alt"></i>
+      <div data-i18n="Analytics">Natijalar</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'exams_list_student' %}active{% endif %}">
+    <a href="{% url 'exams_list_student' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bx-task"></i>
+      <div data-i18n="Analytics">Imtihon</div>
+    </a>
+  </li>
+
+  {% else %}
+  
+  {% if user.study_center and user.role == 'director'%}
+  {% comment %} <li class="menu-item">
+    <a href="{% url 'dashboard' %}" class="menu-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <i class="menu-icon tf-icons bx bx-home-circle"></i>
+      <div data-i18n="Analytics">Asosiy bo'lim</div>
+    </a>
+  </li> {% endcomment %}
+        
+  <!-- Tables -->
+  <li class="menu-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+    <a href="{%url 'dashboard'%}" class="menu-link">
+      <i class="menu-icon tf-icons bx bx-home-circle"></i>
+      <div data-i18n="Tables">Asosiy bo'lim</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'students' %}active{% endif %}">
+    <a href="{% url 'students' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-book-reader"></i>
+      <div data-i18n="Tables">O'quvchilar</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'teachers' %}active{% endif %}">
+    <a href="{% url 'teachers' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-buildings"></i>
+      <div data-i18n="Tables">Ustozlar</div>
+    </a>
+  </li>
+ 
+  <li class="menu-item {% if request.resolver_match.url_name == 'exams_list' %}active{% endif %}">
+    <a href="{% url 'exams_list' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-notepad"></i>
+      <div data-i18n="Tables">Imtihonlar</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'all_history' %}active{% endif %}">
+    <a href="{%url 'all_history' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-receipt"></i>
+      <div data-i18n="Tables">Holatlar</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'check_payments' %}active{% endif %}">
+    <a href="{%url 'check_payments'%}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-bank"></i>
+      <div data-i18n="Tables">To'lovlarni tekshirish</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'today_lessons_view' %}active{% endif %}">
+    <a href="{%url 'today_lessons_view'%}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-calendar-check"></i>
+      <div data-i18n="Tables">Davomat</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'guruhlar' %}active{% endif %}">
+    <a href="{% url 'guruhlar' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-group"></i>
+      <div data-i18n="Tables">Guruhlar</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'fanlar' %}active{% endif %}">
+    <a href="{% url 'fanlar' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-book"></i>
+      <div data-i18n="Tables">Fanlar</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'lessons' %}active{% endif %}">
+    <a href="{% url 'lessons' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-book-reader"></i>
+      <div data-i18n="Tables">Dars jadvali</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'bildirishnomalar' %}active{% endif %}">
+    <a href="#" class="menu-link" onclick="toggleSubmenu(event)">
+      <i class="menu-icon tf-icons bx bxs-bell-ring"></i>
+      <div data-i18n="Tables">Bildirishnomalar</div>
+    </a>
+    <ul class="submenu" style="display: none;">
+      <li class="submenu-item">
+        <a href="{% url 'notify_users' role='teacher'%}" class="submenu-link"><i class="menu-icon tf-icons bx bxs-graduation"></i>Ustozlarga bildirishnoma yuborish</a>
+      </li>
+      <li class="submenu-item">
+        <a href="{% url 'notify_users' role='student'%}" class="submenu-link"><i class="menu-icon tf-icons bx bxs-group"></i>O'quvchilarga bildirishnoma yuborish</a>
+      </li>
+    </ul>
+</li>
+  {% elif user.study_center and user.role == 'teacher' %}
+  <li class="menu-item {% if request.resolver_match.url_name == 'teacher_dashboard' %}active{% endif %}">
+    <a href="{%url 'teacher_dashboard'%}" class="menu-link">
+      <i class="menu-icon tf-icons bx bx-home-circle"></i>
+      <div data-i18n="Analytics">Asosiy bo'lim</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'my_groups_teacher' %}active{% endif %}">
+    <a href="{%url 'my_groups_teacher' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bx-group"></i>
+      <div data-i18n="Tables">Mening guruhlarim</div>
+    </a>
+  </li>
+
+  <li class="menu-item {% if request.resolver_match.url_name == 'students' %}active{% endif %}">
+    <a href="{% url 'students' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-book-reader"></i>
+      <div data-i18n="Tables">O'quvchilar</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'teacher_fan_list' %}active{% endif %}">
+    <a href="{%url 'teacher_fan_list'%}" class="menu-link">
+      <i class="menu-icon tf-icons bx bx-book-bookmark"></i>
+      <div data-i18n="Tables">Fanlarim</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'get_notification' %}active{% endif %}">
+    <a href="{%url 'get_notification' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-bell-ring"></i>
+      <div data-i18n="Tables">Bildirishnomalar</div>
+      {% if notification_message.count > 0 %}
+      
+      <span class="notification-badge">{{ notification_message.count }}</span>
+      
+      
+      {% endif %}
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'create_exam' %}active{% endif %}">
+    <a href="{% url 'create_exam' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxl-microsoft-teams"></i>
+      <div data-i18n="Tables">Imtihon olish</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'notify_users' %}active{% endif %}">
+    <a href="{%url 'notify_users' role='student'%}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-message-square-detail"></i>
+      <div data-i18n="Tables">O'quvchilarga bildirishnoma yuborish</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'add_result' %}active{% endif %}">
+    <a href="{% url 'add_result' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-file-plus"></i>
+      <div data-i18n="Tables">Imtihon natijalarini yuklash</div>
+    </a>
+  </li>
+  <li class="menu-item {% if request.resolver_match.url_name == 'today_lessons_view' %}active{% endif %}">
+    <a href="{% url 'today_lessons_view' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-calendar-check"></i>
+      <div data-i18n="Tables">Davomat olish</div>
+    </a>
+  </li>
+  {% else %}
+  <li class="menu-item {% if request.resolver_match.url_name == 'add_study_center' %}active{% endif %}">
+    <a href="{% url 'add_center' %}" class="menu-link">
+      <i class="menu-icon tf-icons bx bxs-book-add"></i>
+      <div data-i18n="Analytics">O'quv markaz qo'shish</div>
+    </a>
+  </li>
+  {% endif %}
+  {% endif %}
+  <!-- Misc -->
+  <li class="menu-header small text-uppercase"><span class="menu-header-text">Dasturchi</span></li>
+  <li class="menu-item">
+    <a
+      href="https://t.me/coder_18_03"
+      target="_blank"
+      class="menu-link"
+    >
+      <i class="menu-icon tf-icons bx bx-support"></i>
+      <div data-i18n="Support">Qo'llab quvvatlash</div>
+    </a>
+  </li>
+  <li class="menu-item">
+    <a
+      href="{% url 'team' %}"
+      target="_blank"
+      class="menu-link"
+    >
+      <i class="menu-icon tf-icons bx bxl-microsoft-teams"></i>
+      <div data-i18n="Support">Jamoa</div>
+    </a>
+  </li>
+  
+  <li class="menu-item">
+    <a
+      href="{% url 'app_download' %}"
+      target="_blank"
+      class="menu-link"
+    >
+      <i class="menu-icon tf-icons"></i>
+      <div data-i18n="Support"><img src="{% static '/assets/images/download2.png'%}" style="height: 100px; width: 150px;"></div>
+    </a>
+  </li>
+  
+  
+</ul>
+</aside>
+<!-- / Menu -->
+
+
+
+
+
+ <!-- Layout container -->
+ <div class="layout-page">
+    <!-- Navbar -->
+
+    <nav
+      class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+      id="layout-navbar"
+    >
+      <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+          <i class="bx bx-menu bx-sm"></i>
+        </a>
+      </div>
+
+      <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+        <!-- Search -->
+        <div class="navbar-nav align-items-center">
+          <div class="nav-item d-flex align-items-center">
+            </div>
+        </div>
+        <!-- /Search -->
+
+        <ul class="navbar-nav flex-row align-items-center ms-auto">
+          <!-- Place this tag where you want the button to render. -->
+          
+          </li>
+
+          <!-- User -->
+          {% if user.role != 'student' %}
+          <li class="nav-item navbar-dropdown dropdown-user dropdown">
+            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+              <div class="avatar avatar-online">
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" alt class="w-px-40 h-auto rounded-circle" />
+                
+                {% else %}
+                <img src="{% static '/assets/img/avatars/1.png' %}" alt class="w-px-40 h-auto rounded-circle" />
+                {% endif %}
+              </div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="#">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                      <div class="avatar avatar-online">
+                       
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" alt class="w-px-40 h-auto rounded-circle" />
+                
+                {% else %}
+                <img src="{% static '/assets/img/avatars/1.png' %}" alt class="w-px-40 h-auto rounded-circle" />
+                {% endif %}
+                      
+                      </div>
+                    </div>
+                    <div class="flex-grow-1">
+                      <span class="fw-semibold d-block">{{user.first_name.title}} {{user.last_name.title}}</span>
+                      <small class="text-muted">{{user.role}}</small>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <div class="dropdown-divider"></div>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  <i class="bx bx-user me-2"></i>
+                  <span class="align-middle">My Profile</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'settings' %}">
+                  <i class="bx bx-cog me-2"></i>
+                  <span class="align-middle">Settings</span>
+                </a>
+              </li>
+              
+              <li>
+                <div class="dropdown-divider"></div>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url  'logout' %}">
+                  <i class="bx bx-power-off me-2"></i>
+                  <span class="align-middle">Log Out</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          {% else %}
+          <li class="nav-item navbar-dropdown dropdown-user dropdown">
+            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+              <div class="avatar avatar-online">
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" alt class="w-px-40 h-auto rounded-circle" />
+                
+                {% else %}
+                <img src="{% static '/assets/img/avatars/1.png' %}" alt class="w-px-40 h-auto rounded-circle" />
+                {% endif %}
+              </div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="#">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                      <div class="avatar avatar-online">
+                       
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" alt class="w-px-40 h-auto rounded-circle" />
+                
+                {% else %}
+                <img src="{% static '/assets/img/avatars/1.png' %}" alt class="w-px-40 h-auto rounded-circle" />
+                {% endif %}
+                      
+                      </div>
+                    </div>
+                    <div class="flex-grow-1">
+                      <span class="fw-semibold d-block">{{user.first_name.title}} {{user.last_name.title}}</span>
+                      <small class="text-muted">{{user.role}}</small>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <div class="dropdown-divider"></div>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  <i class="bx bx-user me-2"></i>
+                  <span class="align-middle">My Profile</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'settings' %}">
+                  <i class="bx bx-cog me-2"></i>
+                  <span class="align-middle">Settings</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'payment_summary'  request.user.user_id%}">
+                  <i class="bx bx-history me-2"></i>
+                  <span class="align-middle">To'lovlar tarixi</span>
+                </a>
+              </li>
+
+              <li>
+                <div class="dropdown-divider"></div>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url  'logout' %}">
+                  <i class="bx bx-power-off me-2"></i>
+                  <span class="align-middle">Log Out</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          {% endif %}
+          <!--/ User -->
+        </ul>
+      </div>
+    </nav>
+
+    <!-- / Navbar -->

@@ -1,0 +1,7 @@
+django
+openpyxl
+django-simple-history
+django-admin-honeypot
+django-jazzmin
+social-auth-app-django
+environs

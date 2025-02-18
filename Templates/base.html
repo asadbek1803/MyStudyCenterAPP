@@ -1,0 +1,181 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="{% static '/assets/' %}"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>{%block title %} {{title}} {%endblock title%}</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static '/assets/img/favicon/favicon.ico' %}" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="{% static '/assets/vendor/fonts/boxicons.css' %}" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static '/assets/vendor/css/core.css' %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static '/assets/vendor/css/theme-default.css' %}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{% static '/assets/css/demo.css' %}" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{% static '/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+
+    <!-- Page CSS -->
+
+    <!-- Helpers -->
+    <script src="{% static '/assets/vendor/js/helpers.js' %}"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="{% static '/assets/js/config.js' %}"></script>
+
+    <style>
+      .loader-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8); /* Orqa fonni yarim shaffof qilish */
+        display: flex;
+        flex-direction: column; /* Elementlarni ustma-ust joylashtirish */
+        justify-content: center;
+        align-items: center;
+        z-index: 9999; /* Loaderni yuqori qatlamga ko'tarish */
+      }
+  
+      .loader {
+        margin-bottom: None; /* Loader bilan logotip orasiga bo'shliq qo'shish */
+        width: 60px;
+        aspect-ratio: 1;
+        display: grid;
+        grid: 50%/50%;
+        color: #269ba2;
+        --_g: no-repeat linear-gradient(currentColor 0 0);
+        background: var(--_g), var(--_g), var(--_g);
+        background-size: 50.1% 50.1%;
+        animation: l6-0 1.5s infinite steps(1) alternate,
+                   l6-0-0 3s infinite steps(1);
+      }
+  
+      .loader::before {
+        content: "";
+        background: currentColor;
+        transform: perspective(150px) rotateY(0deg) rotateX(0deg);
+        transform-origin: bottom right;
+        animation: l6-1 1.5s infinite linear alternate;
+      }
+  
+      @keyframes l6-0 {
+        0% {background-position: 0 100%, 100% 100%, 100% 0}
+        33% {background-position: 100% 100%, 100% 100%, 100% 0}
+        66% {background-position: 100% 0, 100% 0, 100% 0}
+      }
+  
+      @keyframes l6-0-0 {
+        0% {transform: scaleX(1) rotate(0deg)}
+        50% {transform: scaleX(-1) rotate(-90deg)}
+      }
+  
+      @keyframes l6-1 {
+        16.5% {transform: perspective(150px) rotateX(-90deg) rotateY(0deg) rotateX(0deg); filter: grayscale(0.8)}
+        33% {transform: perspective(150px) rotateX(-180deg) rotateY(0deg) rotateX(0deg)}
+        66% {transform: perspective(150px) rotateX(-180deg) rotateY(-180deg) rotateX(0deg)}
+        100% {transform: perspective(150px) rotateX(-180deg) rotateY(-180deg) rotateX(-180deg); filter: grayscale(0.8)}
+      }
+  </style>
+  </head>
+
+  <body>
+    <div class="loader-container">
+        <div class="loader"></div>
+    </div>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+          <div class="app-brand demo">
+            <a href="{% url 'base_url' %}" class="app-brand-link">
+              <img src="{% static '/assets/images/icon.ico' %}" alt="">
+              </span>
+              
+            </a>
+
+            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+              <i class="bx bx-chevron-left bx-sm align-middle"></i>
+            </a>
+          </div>
+          {% comment %} <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> {% endcomment %}
+        <!-- Chatra {literal} -->
+<!-- <script>
+    (function(d, w, c) {
+        w.ChatraID = 'rywHnMsiws8SMesFm';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = 'https://call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+</script> -->
+<!-- /Chatra {/literal} -->
+          
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/67b36e7eae4c0b190f29af7d/1ikaef81r';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+  <!--End of Tawk.to Script-->
+
+</head>
+        <body>
+        
+        {% include 'includes/header.html' %}
+        {% block content%}
+        
+        <!-- Bu yerda kontentlar bo'ladi -->
+        
+        {% endblock %}
+        {% include 'includes/footer.html' %}
+        {% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> {% endcomment %}
+        </body>
+        <script>
+          window.addEventListener('load', function() {
+            document.querySelector('.loader-container').style.display = 'none';
+          });
+        </script>
+        </html>

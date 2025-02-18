@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+    .blurred {
+        position: relative;
+        filter: blur(5px);
+        pointer-events: none;
+    }
+    .no-access-message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: red;
+        font-size: 24px;
+        font-weight: bold;
+        z-index: 10;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .table-wrapper {
+        position: relative;
+    }
+</style>
+
+<div class="card" style='left: 25px;'>
+    <h5 class="card-header">Jadvallar tarixi <b> (Bu yerda hamma harakatlarni ko'rib turasiz!) </b></h5>
+    <div class="table-responsive text-nowrap">
+      <table class="table {% if user_role != 'director' %}blurred{% endif %}">
+        <thead class="table-dark">
+        <tr>
+            <th>App Nomi</th>
+        </tr>
+        </thead>
+        <tbody class="table-border-bottom-0">
+          <tr>
+            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <a href="{% url 'student_history' %}"> <strong>O'quvchilar</strong></a></td>
+        </tr>
+          <tr>
+            <td><i class="fab fa-react fa-lg text-info me-3"></i> <a href="{%url 'teacher_history'%}"> <strong>Ustozlar</strong></a></td>
+        </tr>
+          <tr>
+            <td><i class="fab fa-vuejs fa-lg text-success me-3"></i> <strong>To'lovlar</strong></td>
+            
+          </tr>
+          <tr>
+            <td>
+              <i class="fab fa-bootstrap fa-lg text-primary me-3"></i> <strong>Fanlar</strong>
+            </td>
+           </tr>
+           <tr>
+            <td>
+              <i class="fab fa-bootstrap fa-lg text-primary me-3"></i> <strong>Guruhlar</strong>
+            </td>
+           </tr>
+
+           <tr>
+            <td>
+              <i class="fab fa-bootstrap fa-lg text-primary me-3"></i> <strong>Imtihonlar</strong>
+            </td>
+           </tr>
+        </tbody>
+        {% if user_role != 'director' %}
+        <div class="no-access-message">
+            Siz ushbu bo'limni ko'ra olmaysiz bu faqat direktorning vazifasi!
+        </div>
+        {% endif %}
+      </table>
+    </div>
+  </div>
+  <!--/ Bootstrap Table with Header Dark -->
+
+
+
+{% endblock %}
+

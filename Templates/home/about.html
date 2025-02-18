@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+{% load static %}
+<html>
+	<head>
+		<title>Biz haqimizda</title>
+		<meta charset="utf-8" />
+	    <link rel="icon" type="image/x-icon" href="{% static 'assets/images/icon-removebg-preview.png' %}">
+		<link rel="stylesheet" href="{% static 'home/assets/css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'home/assets/css/noscript.css' %}" /></noscript>
+	</head>
+	<body class="is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<header id="header">
+					<h1 id="logo"><a href="{%url 'home' %}"><img style="height: 200px; padding-bottom: 10px;" src="{% static 'assets/images/icon-removebg-preview.png'%}"></a></h1>
+					<nav id="nav">
+						<ul>
+							<li><a href="{%url 'home' %}">Bosh sahifa</a></li>
+							<li>
+								<a href="#">Qo'shimcha</a>
+								<ul>
+									<li><a href="{% url 'about' %}" class="active">Biz haqimizda</a></li>
+									<li><a href="{% url 'team' %}">Jamoa</a></li>
+									<li><a href="{% url 'vakansiyalar' %}">Vakansiyalar</a></li>
+									<li>
+										<a href="https://t.me/StudyCenterCreatorBot">A'zo bo'lish</a>
+										<ul>
+											<li><a href="https://t.me/coder_18_03">Admin</a></li>
+											<li><a href="https://t.me/StudyCenterCreatorBot">O'quv markaz qo'shish</a></li>
+
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li><a href="elements.html">O'quv markaz qo'shish</a></li>
+                            {% if request.user.is_authenticated %}
+                            <li><a href="{% url 'base_url' %}" class="button primary"> <i class="fa fa-sign-in" aria-hidden="true"></i> Dashboardga o'tish</a></li>
+                            {% else %}
+							<li><a href="{% url 'login' %}" class="button primary"><i class="fa fa-user" aria-hidden="true"></i>Tizimga Kirish</a></li>
+                            {% endif %}
+                        </ul>
+					</nav>
+				</header>
+
+			<!-- Main -->
+				<div id="main" class="wrapper style1">
+					<div class="container">
+						<header class="major">
+							<h2>My Study Center</h2>
+							<p>Biz haqimizda</p>
+						</header>
+
+						<!-- Content -->
+							<section id="content">
+    					<a href="#" class="image fit">
+						<img src="{% static 'home/assets/images/banner_about.png' %}" alt="My Study Center" />
+					</a>
+					<h2>My Study Center</h2>
+					<p>
+						"My Study Center" – o'qituvchilar va o'quv markazlari ishini osonlashtirish maqsadida yaratilgan zamonaviy ta'lim platformasi.
+						Ushbu tizim, davomatni nazorat qilish, offline imtihonlar uchun ro'yxatdan o'tish, fanlar va dars jadvallarini boshqarish,
+						to'lovlar va ularni hisoblash jarayonlarini soddalashtirish uchun mo'ljallangan.
+					</p>
+					<h3>Asosiy imkoniyatlarimiz:</h3>
+					<ul>
+						<li><strong>Rollarga bo'linish:</strong> Tizim uchta asosiy rolga ega: direktor, o'qituvchi va o'quvchi.</li>
+						<li><strong>Direktor:</strong> Username va murakkab parol orqali tizimga kiradi.</li>
+						<li><strong>O'qituvchi:</strong> O'z emaili va paroli yordamida tizimga kiradi.</li>
+						<li><strong>O'quvchi:</strong> 8 xonalik kodlangan user_id va parol orqali tizimga kiradi.</li>
+						<li><strong>Bir nechta o'quv markazlari:</strong> Tizim turli o'quv markazlarini qo'llab-quvvatlaydi.</li>
+					</ul>
+					<h3>Maqsadimiz:</h3>
+					<p>
+						Bizning maqsadimiz ta'lim jarayonini soddalashtirish va samarali boshqarishdir, shuningdek,
+						o'qituvchilar va o'quvchilarga qulay sharoitlar yaratishdir.
+					</p>
+					<h3>Aloqa:</h3>
+					<p>
+						Biz bilan bog'laning va "My Study Center" platformasidan foydalanib, ta'lim jarayonini qanday osonlashtirishingiz mumkinligini bilib oling!
+					</p>
+				</section>
+
+					</div>
+				</div>
+
+			<!-- Footer -->
+				<footer id="footer">
+					<ul class="icons">
+						<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+						<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+						<li><a href="#" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; My Study Center 2024. Dev: Asadbek Abdubannopov All rights reserved.</li>
+					</ul>
+				</footer>
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="{% static 'home/assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/jquery.scrolly.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/jquery.dropotron.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/jquery.scrollex.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/browser.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/breakpoints.min.js' %}"></script>
+			<script src="{% static 'home/assets/js/util.js' %}"></script>
+			<script src="{% static 'home/assets/js/main.js' %}"></script>
+
+	</body>
+</html>

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.form-check-inline {
+    margin-right: 20px;
+}
+</style>
+    <div class="container mt-5">
+        <h1 class="text-center">{{ group.name }} - Davomat olish</h1>
+        <p><strong>Bugungi sana:</strong> {{ date }}</p>
+        <p><strong>Dars jadvali:</strong> {{ lesson_schedule }}</p>
+
+        {% if not is_completed %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover mt-4">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>O'quvchi</th>
+                            <th>Ishtirok etdi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.get_full_name }}</td>
+                            <td>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="student_{{ student.id }}" value="present"
+                                    {% if attendances.student_id == student.id and attendances.is_present %} checked {% endif %}>
+                                    <label class="form-check-label">Ha</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="student_{{ student.id }}" value="absent"
+                                    {% if attendances.student_id == student.id and not attendances.is_present %} checked {% endif %}>
+                                    <label class="form-check-label">Yo'q</label>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Davomatni saqlash</button>
+        </form>
+        {% else %}
+        <div class="alert alert-info mt-4" role="alert">
+            Davomat allaqachon yakunlangan.
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

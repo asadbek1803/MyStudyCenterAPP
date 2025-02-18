@@ -1,0 +1,244 @@
+
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load static %}
+
+{% block content%} 
+
+
+<link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+<style type="text/css">
+    	body{margin-top:20px;} 
+                                                                           
+    </style>
+</head>
+<body>
+<hr>
+
+<div class="container bootstrap snippets bootdey">
+    <div class="row">
+        <div class="col-sm-10">
+            <h1>{{guruh.name}}</h1>
+        </div>
+        <div class="col-sm-2">
+            {% if guruh.group_logo %}
+            {% comment %} Pass {% endcomment %}
+            <a href="{{guruh.get_url}}" class="pull-right"><img title="profile image" class="img-circle img-responsive" src="{{guruh.group_logo.url}}" alt=""/></a>
+            {% else %}
+            <a href="{{guruh.get_url}}" class="pull-right"><img title="profile image" class="img-circle img-responsive" src="{% static 'icons/group.png'%}"/></a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <ul class="list-group">
+                <li class="list-group-item text-muted">Guruh</li>
+                <li class="list-group-item text-right">
+                    {% for fan in guruh.fan.all %}
+                    {{ fan.name }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                    Fanlar belgilanmagan
+                    {% endfor %}
+                </li>
+                <li class="list-group-item text-right">
+                    <span class="pull-left"><strong>Yaratilgan sana</strong></span> {{guruh.created_at}}
+                </li>
+                <li class="list-group-item text-right">
+                    <span class="pull-left"><strong>Yangilangan sana</strong></span> {{guruh.update_at}}
+                </li>
+                <li class="list-group-item text-right">
+                    <span class="pull-left"><strong>Guruh ustozi</strong></span> {% for teacher in teachers%}
+                    {{ teacher.first_name }} {{ teacher.last_name }}<br>
+                    {% endfor %}
+                </li>
+            </ul>
+            <div class="panel panel-default">
+                <div class="panel-heading">Qo'shimcha ma'lumot <i class="fa fa-link fa-1x"></i></div>
+                {% if guruh.description%}
+                <div class="panel-body">{{guruh.description}}</div>
+                {% else %}
+                <div class="panel-body">Qo'shimcha ma'lumot mavjud emas!</div>
+                {% endif %}
+
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item text-muted">Jami o'quvchilar <i class="fa fa-dashboard fa-1x"></i></li>
+                <li class="list-group-item text-right">
+                    <span class="pull-left"><strong>O'quvchilar</strong></span> {{total_students}}
+                </li>
+            
+        </div>
+
+        <div class="col-sm-9">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active"><a href="#home" data-toggle="tab">🎓O'quvchilar</a></li>
+                <li><a href="#messages" data-toggle="tab">🏆O'quvchilar reytingi</a></li>
+                <li><a href="#settings" data-toggle="tab">🛠 Tahrirlash</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="home">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Ismi va familyasi</th>
+                                    <th>Telefon raqami</th>
+                                    <th>O'qiyapti</th>
+                                    <th>Oxirgi kirish</th>
+                                    <th>Jami ball</th>
+                                    <th>Username</th>
+                                </tr>
+                            </thead>
+                            <tbody id="items">
+                                {% for student in students %}
+                                <tr>
+                                    
+                                    <td>{{student.id}}</td>
+                                    <td>{{student.first_name}} {{student.last_name}}</td>
+                                    <td>{{student.phone}}</td>
+                                    <td>
+                                        {% if student_fanlar|get_item:student %}
+                                            {% for fan in student_fanlar|get_item:student %}
+                                                {{ fan.name }}{% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            Fanlar mavjud emas
+                                        {% endif %}
+                                    </td>
+                                    <td>{{student.last_login}}</td>
+                                    <td>{{student.total_score}}</td>
+                                    <td>{{student.username}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4 text-center">
+                                <ul class="pagination" id="myPager"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+                </div>
+
+                <div class="tab-pane" id="messages">
+                    <h2></h2>
+                    <ul class="list-group">
+                        <div class="container">
+                            <div class="card">
+                              <div class="content">
+                                <div class="img"><img src="https://unsplash.it/200/200"></div>
+                                <div class="cardContent">
+                                  <h3>Luis Molina<br><span>Web Developer</span></h3>
+                                </div>
+                              </div>
+                              <ul class="sci">
+                                <li style="--i:1">
+                                  <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                </li>
+                                <li style="--i:2">
+                                  <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                                </li>
+                                <li style="--i:3">
+                                  <a href="#"><i class="fa fa-github" aria-hidden="true"></i></a>
+                                </li>
+                            </ul>
+                            </div>
+                            <div class="card">
+                              <div class="content">
+                                <div class="img"><img src="https://unsplash.it/200/201"></div>
+                                <div class="cardContent">
+                                  <h3>Someone Else<br><span>Grafic Designer</span></h3>
+                                </div>
+                              </div>
+                              <ul class="sci">
+                                <li style="--i:1">
+                                  <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                </li>
+                                <li style="--i:2">
+                                  <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                                </li>
+                                <li style="--i:3">
+                                  <a href="#"><i class="fa fa-github" aria-hidden="true"></i></a>
+                                </li>
+                            </ul>
+                            </div>
+                          </div>
+                    </ul>
+                </div>
+
+                <div class="tab-pane" id="settings">
+                    <hr />
+                    <form class="form" action="##" method="post" id="registrationForm">
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="first_name"> <h4>First name</h4></label>
+                                <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" title="enter your first name if any." />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="last_name"> <h4>Last name</h4></label>
+                                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" title="enter your last name if any." />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="phone"> <h4>Phone</h4></label>
+                                <input type="text" class="form-control" name="phone" id="phone" placeholder="enter phone" title="enter your phone number if any." />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="mobile"> <h4>Mobile</h4></label>
+                                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="enter mobile number" title="enter your mobile number if any." />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="email"> <h4>Email</h4></label>
+                                <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email." />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="email"> <h4>Location</h4></label>
+                                <input type="email" class="form-control" id="location" placeholder="somewhere" title="enter a location" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="password"> <h4>Password</h4></label>
+                                <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password." />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="password2"> <h4>Verify</h4></label>
+                                <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2." />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <br />
+                                <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Saqlash</button>
+                                <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Tozalash</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script type="text/javascript"></script>
+
+
+{% endblock %}
+

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+<div class="card-body">
+    <form method='post' action='/center/edit/fan/'> {% csrf_token %}
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label" for="basic-default-name">Fan nomi</label>
+        <div class="col-sm-10">
+          <input name='name' type="text" value="{{fan.name}}" class="form-control" id="basic-default-name" placeholder="Matematika" />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlSelect1" class="form-label">O'qituvchi</label>
+        <select name='teacher' class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
+          <option value='' selected>Tanlash uchun bosing</option>
+          {% for teacher in teachers %}
+          <option value="{{teacher.id}}"
+          {% if teacher in fan.teacher_set.all %}selected{% endif %}
+          >{{teacher.first_name}}</option>
+            {% endfor %}
+        </select>
+      </div>
+      <div class="row justify-content-end">
+        <div class="col-sm-10">
+          <button type="submit" class="btn btn-primary">Qo'shish</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Basic with Icons -->
+
+
+{% endblock %}
