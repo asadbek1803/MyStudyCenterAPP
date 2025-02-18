@@ -159,6 +159,33 @@
   s0.parentNode.insertBefore(s1,s0);
   })();
   </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      if (Notification.permission !== "granted") {
+          Notification.requestPermission();
+      }
+  });
+
+  function showNotification(message) {
+      if (Notification.permission === "granted") {
+          new Notification("Yangi Xabar!", {
+              body: message,
+              icon: "https://png.pngtree.com/png-vector/20190419/ourmid/pngtree-vector-notification-icon-png-image_958619.jpg"
+          });
+      }
+  }
+
+  // Serverdan kelgan xabarni olish uchun AJAX yoki WebSocket ishlatish mumkin
+  fetch("https://mystudycenter.pythonanywhere.com/auth/get_last_notification/")
+      .then(response => response.json())
+      .then(data => {
+          if (data.message) {
+              showNotification(data.message);
+          }
+      });
+</script>
+
   <!--End of Tawk.to Script-->
 
 </head>

@@ -218,3 +218,11 @@ def send_notification(request, role):
 
     else:
         return redirect('/')
+
+
+@login_required
+def get_latest_notification(request):
+    notif = NotifactionMessage.objects.filter(receiver=request.user).order_by('-id').first()
+    if notif:
+        return JsonResponse({"message": notif.message})
+    return JsonResponse({"message": None})
