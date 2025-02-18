@@ -9,6 +9,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .models import Account, NotifactionMessage
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 logger = logging.getLogger(__name__)
@@ -189,33 +191,46 @@ def settings_view(request):
 def send_notification(request, role):
     if request.user.role in ['director', 'teacher']:
         if role in ['teacher', 'student']:
+            users = Account.objects.filter(role=role, study_center=request.user.study_center)
 
-            users = Account.objects.filter(role=role, study_center=request.user.study_center)  # Roliga qarab filtrlaymiz (o'quvchi yoki o'qituvchi)
             if request.method == 'POST':
                 message = request.POST.get('message')
                 all_users = request.POST.get('send_to_all', 'off') == 'on'
+
                 if all_users:
-                    receivers = users  # Hammaga jo'natish opsiyasi ishlatilsa
+                    receivers = users
                 else:
                     selected_users = request.POST.getlist('selected_users')
-                    if selected_users == None or len(selected_users) == 0:
+                    if not selected_users:
                         messages.error(request, f"Siz {role}larni tanlamadingiz!")
                         return redirect('notify_users', role=role)
                     receivers = Account.objects.filter(id__in=selected_users)
 
-                notifaction = NotifactionMessage.objects.create(
+                # Yangi bildirishnomani saqlash
+                notification = NotifactionMessage.objects.create(
                     message=message,
                     sender=request.user,
                 )
-                notifaction.receiver.set(receivers)
-                notifaction.save()
-                messages.success(request, "Xabarlar muvaffiqiyatli yuborildi!")
-                return redirect('notify_users', role=role)  # Muvaffaqiyatli sahifaga o'tish
+                notification.receiver.set(receivers)
+                notification.save()
+
+                # WebSocket orqali bildirishnoma jo‘natish
+                channel_layer = get_channel_layer()
+                for user in receivers:
+                    async_to_sync(channel_layer.group_send)(
+                        f"notifications_{user.id}",
+                        {
+                            "type": "send_notification",
+                            "message": message,
+                        },
+                    )
+
+                messages.success(request, "Xabarlar muvaffaqiyatli yuborildi!")
+                return redirect('notify_users', role=role)
 
             return render(request, 'xabarlar/send_notification.html', {'users': users})
         else:
             return redirect("block_error_page")
-
     else:
         return redirect('/')
 

@@ -167,6 +167,16 @@
       }
   });
 
+  // WebSocket ulanishi
+  const socket = new WebSocket("wss://" + window.location.host + "/ws/notifications/");
+
+  socket.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      if (data.message) {
+          showNotification(data.message);
+      }
+  };
+
   function showNotification(message) {
       if (Notification.permission === "granted") {
           new Notification("Yangi Xabar!", {
@@ -175,16 +185,8 @@
           });
       }
   }
-
-  // Serverdan kelgan xabarni olish uchun AJAX yoki WebSocket ishlatish mumkin
-  fetch("https://mystudycenter.pythonanywhere.com/auth/get_last_notification/")
-      .then(response => response.json())
-      .then(data => {
-          if (data.message) {
-              showNotification(data.message);
-          }
-      });
 </script>
+
 
   <!--End of Tawk.to Script-->
 
