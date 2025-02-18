@@ -77,6 +77,14 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend'
 ]
 
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Redis ishlatsangiz: "channels_redis.core.RedisChannelLayer"
+    },
+}
+
+
 SOCIAL_AUTH_TELEGRAM_BOT_TOKEN = env.str('TELEGRAM_BOT_TOKEN')
 LOGIN_REDIRECT_URL = "/restart/"
 LOGIN_URL = "/auth/login/"
